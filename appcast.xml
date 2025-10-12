@@ -10,8 +10,8 @@
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
             <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.3/Hard-Linker-1.0.3.zip" length="2015910" type="application/octet-stream" sparkle:edSignature="SR6yZIZ37HjladuO61NvxSfRnbj9Gl04f6qWwacIuMubC9cpjwukNVCl5gY0qriUJcwFDSVPbuSA6PZRjyOpDg=="/>
             <sparkle:deltas>
-                <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.3/Hard%20Linker4-3.delta" sparkle:deltaFrom="3" length="26538" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="cqe2CG3rRCj1JoNzRFXuFaqKGGh/6MiaHUdhH5eZ7nyimtCED60q5trbndveRpyr3Q+Fl5+vH4V4l1WtdlKvBw=="/>
-                <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.3/Hard%20Linker4-2.delta" sparkle:deltaFrom="2" length="24670" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="addNjojbqLb6UkpX/0GG8DeRLN4WEpvsJcJcNeFCic4OSIjuB3Rr2tjYla4rGnZ5CFjUMcLcALwB4ai7q1yOAQ=="/>
+                <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.3/Hard.Linker4-3.delta" sparkle:deltaFrom="3" length="26538" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="cqe2CG3rRCj1JoNzRFXuFaqKGGh/6MiaHUdhH5eZ7nyimtCED60q5trbndveRpyr3Q+Fl5+vH4V4l1WtdlKvBw=="/>
+                <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.3/Hard.Linker4-2.delta" sparkle:deltaFrom="2" length="24670" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="addNjojbqLb6UkpX/0GG8DeRLN4WEpvsJcJcNeFCic4OSIjuB3Rr2tjYla4rGnZ5CFjUMcLcALwB4ai7q1yOAQ=="/>
             </sparkle:deltas>
         </item>
         <item>
