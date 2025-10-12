@@ -1,13 +1,29 @@
 import SwiftUI
 import UniformTypeIdentifiers
+import Sparkle
 
 @main
 struct HardLinkCreatorApp: App {
+    private let updaterController: SPUStandardUpdaterController
+
+    init() {
+        updaterController = SPUStandardUpdaterController(
+            startingUpdater: true,
+            updaterDelegate: nil,
+            userDriverDelegate: nil
+        )
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
         .windowResizability(.contentSize)
+        .commands {
+            CommandGroup(after: .appInfo) {
+                CheckForUpdatesView(updater: updaterController.updater)
+            }
+        }
     }
 }
 
@@ -292,6 +308,17 @@ struct ContentView: View {
                     statusMessage = "Completed with errors:\n" + errorMessages.joined(separator: "\n")
                 }
             }
+        }
+    }
+}
+
+// MARK: - Sparkle Update Menu View
+struct CheckForUpdatesView: View {
+    let updater: SPUUpdater
+
+    var body: some View {
+        Button("Check for Updates…") {
+            updater.checkForUpdates()
         }
     }
 }

@@ -6,3 +6,17 @@ DerivedData/
 .swiftpm/configuration/registries.json
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .netrc
+
+# Sparkle private key - NEVER commit this!
+sparkle_private_key
+sparkle_private_key.txt
+*.pem
+
+# Release builds
+releases/
+
+# Temporary files
+*.tmp
+*.log
+GITHUB_SECRETS.md
+NEW_BUILD.md
