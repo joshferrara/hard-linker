@@ -3,18 +3,6 @@
     <channel>
         <title>Hard Linker</title>
         <item>
-<<<<<<< Updated upstream
-            <title>1.0.4</title>
-            <pubDate>Sun, 12 Oct 2025 16:04:46 -0500</pubDate>
-            <sparkle:version>5</sparkle:version>
-            <sparkle:shortVersionString>1.0.4</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.4/Hard-Linker-1.0.4.zip" length="2015276" type="application/octet-stream" sparkle:edSignature="ED41nUnUB6xVxmIkHI1LwrZgvduQairT8OgFdd0mHUtbwCVLRkjDijKYcfBqWSr5vNZksHS1QEq+ujOyPuahCQ=="/>
-            <sparkle:deltas>
-                <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.4/Hard.Linker5-4.delta" sparkle:deltaFrom="4" length="11490" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="vTfthIrJ/Q6hEyqzMamUwMPMfxH1GBhs+2SzjRYfOdJxm7Oz2+aYi6qwU0XjUKUBJ8H46kd4eKIvUNzoFfjzCA=="/>
-                <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.4/Hard.Linker5-3.delta" sparkle:deltaFrom="3" length="28682" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="MtVEqGoM2bKuC6ezjSbSTBMUYktVyDJ0iP9kW9NWo9NM66E5xxeibE3eKX3Uv6gPGVIJee3Df2bYNYgwuG6cDQ=="/>
-                <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.4/Hard.Linker5-2.delta" sparkle:deltaFrom="2" length="26830" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="SNrNOUd79hdXPBxq2sBafjXEhX/m0g5HdqcApmmoNd81bNXNyxEt1ePY5GejObdHqx1guMGZNF1RscQYa7t4Aw=="/>
-=======
             <title>1.0.5</title>
             <pubDate>Sun, 12 Oct 2025 16:59:58 -0500</pubDate>
             <sparkle:version>5</sparkle:version>
@@ -24,7 +12,19 @@
             <sparkle:deltas>
                 <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.5/Hard-Linker5-3.delta" sparkle:deltaFrom="3" length="8678" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="lNP2da9i3UiQMhwRKDqk4b+fCDSU/tJaUBcMqErFTFApJ5r3gQvPALF2W5CvkO7iMwER7DwuBMG8UXN8gm2PDQ=="/>
                 <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.5/Hard-Linker5-2.delta" sparkle:deltaFrom="2" length="9358" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="MgMps9gS0YbAw0GVI8qC+mZQiS4+tmz8Y79FbL6hE6tsg9AI3n+pWpma9SoMPrldW1tlNq522TpQ6cF/vfHoCQ=="/>
->>>>>>> Stashed changes
+            </sparkle:deltas>
+        </item>
+        <item>
+            <title>1.0.4</title>
+            <pubDate>Sun, 12 Oct 2025 16:04:46 -0500</pubDate>
+            <sparkle:version>4</sparkle:version>
+            <sparkle:shortVersionString>1.0.4</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.4/Hard-Linker-1.0.4.zip" length="2015276" type="application/octet-stream" sparkle:edSignature="ED41nUnUB6xVxmIkHI1LwrZgvduQairT8OgFdd0mHUtbwCVLRkjDijKYcfBqWSr5vNZksHS1QEq+ujOyPuahCQ=="/>
+            <sparkle:deltas>
+                <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.4/Hard.Linker5-4.delta" sparkle:deltaFrom="4" length="11490" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="vTfthIrJ/Q6hEyqzMamUwMPMfxH1GBhs+2SzjRYfOdJxm7Oz2+aYi6qwU0XjUKUBJ8H46kd4eKIvUNzoFfjzCA=="/>
+                <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.4/Hard.Linker5-3.delta" sparkle:deltaFrom="3" length="28682" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="MtVEqGoM2bKuC6ezjSbSTBMUYktVyDJ0iP9kW9NWo9NM66E5xxeibE3eKX3Uv6gPGVIJee3Df2bYNYgwuG6cDQ=="/>
+                <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.4/Hard.Linker5-2.delta" sparkle:deltaFrom="2" length="26830" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="SNrNOUd79hdXPBxq2sBafjXEhX/m0g5HdqcApmmoNd81bNXNyxEt1ePY5GejObdHqx1guMGZNF1RscQYa7t4Aw=="/>
             </sparkle:deltas>
         </item>
         <item>
