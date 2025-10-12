@@ -35,6 +35,20 @@ echo_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
+sign_component() {
+    local component_path="$1"
+    if [ ! -e "${component_path}" ]; then
+        echo_error "Component not found for codesigning: ${component_path}"
+        exit 1
+    fi
+
+    codesign --force --options runtime \
+        --timestamp \
+        --sign "${SIGNING_IDENTITY}" \
+        --preserve-metadata=entitlements,requirements \
+        "${component_path}"
+}
+
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -96,11 +110,16 @@ fi
 
 # Step 4: Code sign the app bundle
 echo_info "Code signing application..."
+echo_info "Signing Sparkle helper components..."
+sign_component "${APP_BUNDLE}/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc"
+sign_component "${APP_BUNDLE}/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc"
+sign_component "${APP_BUNDLE}/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app"
+sign_component "${APP_BUNDLE}/Contents/Frameworks/Sparkle.framework"
+
 codesign --force --options runtime \
     --entitlements "${ENTITLEMENTS}" \
     --sign "${SIGNING_IDENTITY}" \
     --timestamp \
-    --deep \
     "${APP_BUNDLE}"
 
 # Verify code signature
