@@ -106,7 +106,7 @@ codesign --force --options runtime \
 # Verify code signature
 echo_info "Verifying code signature..."
 codesign --verify --verbose "${APP_BUNDLE}"
-spctl --assess --verbose "${APP_BUNDLE}"
+spctl --assess --verbose "${APP_BUNDLE}" || echo_warn "App not yet notarized (expected at this stage)"
 
 # Step 5: Create distributable archive
 echo_info "Creating distributable archive..."
@@ -144,7 +144,7 @@ if [ ! -f "${SPARKLE_PRIVATE_KEY}" ]; then
     echo_warn "Skipping appcast generation. Run generate_keys first."
 else
     # Find Sparkle's generate_appcast tool
-    SPARKLE_TOOL=$(find .build/checkouts -name "generate_appcast" | head -1)
+    SPARKLE_TOOL=$(find .build/artifacts -name "generate_appcast" -type f | head -1)
     if [ -z "${SPARKLE_TOOL}" ]; then
         echo_warn "generate_appcast tool not found. Make sure Sparkle is resolved."
         echo_warn "Run: swift package resolve"

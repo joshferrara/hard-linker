@@ -37,11 +37,6 @@ struct ContentView: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            Text("Hard Link Creator")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .padding(.top)
-
             HStack(spacing: 3) {
                 Text("Create hard links between folders using the")
                     .font(.subheadline)
@@ -59,7 +54,7 @@ struct ContentView: View {
 
             // Source folders section
             VStack(alignment: .leading, spacing: 8) {
-                Text("Source Folders:")
+                Text("Source Files or Folders:")
                     .font(.headline)
 
                 ZStack {
@@ -74,17 +69,17 @@ struct ContentView: View {
                     VStack {
                         if sourceFolders.isEmpty {
                             VStack(spacing: 8) {
-                                Image(systemName: "folder.badge.plus")
+                                Image(systemName: "doc.badge.plus")
                                     .font(.title2)
                                     .foregroundColor(.secondary)
-                                Text("Drop folders here or click to select")
+                                Text("Drop files or folders here or click to select")
                                     .foregroundColor(.secondary)
                             }
                         } else {
                             LazyVStack(alignment: .leading, spacing: 4) {
                                 ForEach(Array(sourceFolders.enumerated()), id: \.offset) { index, folder in
                                     HStack {
-                                        Image(systemName: "folder.fill")
+                                        Image(systemName: folder.hasDirectoryPath ? "folder.fill" : "doc.fill")
                                             .foregroundColor(.accentColor)
                                         Text(folder.lastPathComponent)
                                             .font(.system(.body, design: .monospaced))
@@ -110,7 +105,7 @@ struct ContentView: View {
                 .onDrop(of: [UTType.fileURL], isTargeted: nil) { providers in
                     handleSourceDrop(providers: providers)
                 }
-                .fileImporter(isPresented: $showingSourcePicker, allowedContentTypes: [UTType.folder], allowsMultipleSelection: true) { result in
+                .fileImporter(isPresented: $showingSourcePicker, allowedContentTypes: [UTType.item], allowsMultipleSelection: true) { result in
                     handleSourcePickerResult(result)
                 }
             }
@@ -209,8 +204,7 @@ struct ContentView: View {
         for provider in providers {
             provider.loadItem(forTypeIdentifier: UTType.fileURL.identifier, options: nil) { item, error in
                 if let data = item as? Data,
-                   let url = URL(dataRepresentation: data, relativeTo: nil),
-                   url.hasDirectoryPath {
+                   let url = URL(dataRepresentation: data, relativeTo: nil) {
                     DispatchQueue.main.async {
                         if !sourceFolders.contains(url) {
                             sourceFolders.append(url)
@@ -240,13 +234,13 @@ struct ContentView: View {
     private func handleSourcePickerResult(_ result: Result<[URL], Error>) {
         switch result {
         case .success(let urls):
-            for url in urls where url.hasDirectoryPath {
+            for url in urls {
                 if !sourceFolders.contains(url) {
                     sourceFolders.append(url)
                 }
             }
         case .failure(let error):
-            statusMessage = "Error selecting source folders: \(error.localizedDescription)"
+            statusMessage = "Error selecting source files or folders: \(error.localizedDescription)"
         }
     }
 
@@ -303,7 +297,8 @@ struct ContentView: View {
                 isCreatingLinks = false
 
                 if allSuccess {
-                    statusMessage = "Successfully created hard links for \(sourceFolders.count) folder(s)"
+                    let itemWord = sourceFolders.count == 1 ? "item" : "items"
+                    statusMessage = "Successfully created hard links for \(sourceFolders.count) \(itemWord)"
                 } else {
                     statusMessage = "Completed with errors:\n" + errorMessages.joined(separator: "\n")
                 }

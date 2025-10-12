@@ -3,14 +3,27 @@
     <channel>
         <title>Hard Linker</title>
         <item>
+            <title>1.0.3</title>
+            <pubDate>Sun, 12 Oct 2025 14:48:18 -0500</pubDate>
+            <sparkle:version>4</sparkle:version>
+            <sparkle:shortVersionString>1.0.3</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.3/Hard-Linker-1.0.3.zip" length="2015910" type="application/octet-stream" sparkle:edSignature="SR6yZIZ37HjladuO61NvxSfRnbj9Gl04f6qWwacIuMubC9cpjwukNVCl5gY0qriUJcwFDSVPbuSA6PZRjyOpDg=="/>
+            <sparkle:deltas>
+                <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.3/Hard%20Linker4-3.delta" sparkle:deltaFrom="3" length="26538" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="cqe2CG3rRCj1JoNzRFXuFaqKGGh/6MiaHUdhH5eZ7nyimtCED60q5trbndveRpyr3Q+Fl5+vH4V4l1WtdlKvBw=="/>
+                <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.3/Hard%20Linker4-2.delta" sparkle:deltaFrom="2" length="24670" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="addNjojbqLb6UkpX/0GG8DeRLN4WEpvsJcJcNeFCic4OSIjuB3Rr2tjYla4rGnZ5CFjUMcLcALwB4ai7q1yOAQ=="/>
+            </sparkle:deltas>
+        </item>
+        <item>
             <title>1.0.2</title>
             <pubDate>Sun, 12 Oct 2025 13:54:49 -0500</pubDate>
             <sparkle:version>3</sparkle:version>
             <sparkle:shortVersionString>1.0.2</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.2/Hard-Linker-1.0.2.zip" length="2015904" type="application/octet-stream" sparkle:edSignature="BdxggN9Y2XURg5OSvH1y19GaJUznMKOtM9ElTT1O9ApsyhUCIdPQoBtBJ7W7PzzB1jnrwltyFjKgAUQN3dG1BQ=="/>
+            <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.3/Hard-Linker-1.0.2.zip" length="2015904" type="application/octet-stream" sparkle:edSignature="BdxggN9Y2XURg5OSvH1y19GaJUznMKOtM9ElTT1O9ApsyhUCIdPQoBtBJ7W7PzzB1jnrwltyFjKgAUQN3dG1BQ=="/>
             <sparkle:deltas>
-                <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.2/Hard%20Linker3-2.delta" sparkle:deltaFrom="2" length="10550" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="mv/DCKYhb8F6YZEi/slJviSlgW/GvobQBH0XDtu+g3fEQHcDL0Ttf/gYsOaxAaYPJ1JIBW+G3PaDiWmnB7n5AQ=="/>
+                <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.3/Hard%20Linker3-2.delta" sparkle:deltaFrom="2" length="10550" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="mv/DCKYhb8F6YZEi/slJviSlgW/GvobQBH0XDtu+g3fEQHcDL0Ttf/gYsOaxAaYPJ1JIBW+G3PaDiWmnB7n5AQ=="/>
+                <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.3/Hard%20Linker3-1.delta" sparkle:deltaFrom="1" length="25890" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="oBjlyAe61ImLHg7fdMi08TikuTx1vgzy1YlxkeBXvJs2YMSb6u+r+USarx6GOM88pHPAsgMXNcEqDRrvCVqvAQ=="/>
             </sparkle:deltas>
         </item>
         <item>
@@ -19,7 +32,7 @@
             <sparkle:version>2</sparkle:version>
             <sparkle:shortVersionString>1.0.1</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.2/Hard-Linker-1.0.1.zip" length="2015173" type="application/octet-stream" sparkle:edSignature="RE4UvPK0bamWePt8dnDzFR5h2fJB8S9vKC2g23HDg62g0bfMhYV9/OXHSNGi9U82179SOzSqGQv0t2mrXXBKAA=="/>
+            <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.3/Hard-Linker-1.0.1.zip" length="2015173" type="application/octet-stream" sparkle:edSignature="RE4UvPK0bamWePt8dnDzFR5h2fJB8S9vKC2g23HDg62g0bfMhYV9/OXHSNGi9U82179SOzSqGQv0t2mrXXBKAA=="/>
         </item>
     </channel>
 </rss>
