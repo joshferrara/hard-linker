@@ -345,7 +345,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			3guoNZFxUWkCPuH/xNFq6NnoeqM=
+			kaHlX+c3LN6U3a6WkwDae2wkHgQ=
 			</data>
 			<key>requirement</key>
 			<string>identifier Autoupdate and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "684MMQ8PLC"</string>
@@ -926,7 +926,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			f7ojOJcN/Crim6RAj1AGR7cXKyI=
+			75LYrD99wPRb0Uxoqwwt7dvaXHE=
 			</data>
 			<key>requirement</key>
 			<string>identifier "org.sparkle-project.Sparkle.Updater" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "684MMQ8PLC"</string>
@@ -935,7 +935,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			biCxA5cOG77NZsx4+9P6h7a3Pcw=
+			3qSGavXd9vVlqyV3SCnWW42IoNs=
 			</data>
 			<key>requirement</key>
 			<string>identifier "org.sparkle-project.DownloaderService" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "684MMQ8PLC"</string>
@@ -944,7 +944,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			TusN12FFQ3vY64WZnctAfEp75Lw=
+			1tsk6FjFYCI3LBjVyGAyZL7hsL0=
 			</data>
 			<key>requirement</key>
 			<string>identifier "org.sparkle-project.InstallerLauncher" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "684MMQ8PLC"</string>

@@ -7,7 +7,7 @@ set -e  # Exit on any error
 
 # Configuration
 APP_NAME="Hard Linker"
-APP_BUNDLE="Hard Linker.app"
+APP_BUNDLE="Hard-Linker.app"
 BUNDLE_ID="com.hardlinker.app"
 VERSION=""
 BUILD_NUMBER=""
@@ -113,6 +113,7 @@ echo_info "Code signing application..."
 echo_info "Signing Sparkle helper components..."
 sign_component "${APP_BUNDLE}/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Installer.xpc"
 sign_component "${APP_BUNDLE}/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices/Downloader.xpc"
+sign_component "${APP_BUNDLE}/Contents/Frameworks/Sparkle.framework/Versions/B/Autoupdate"
 sign_component "${APP_BUNDLE}/Contents/Frameworks/Sparkle.framework/Versions/B/Updater.app"
 sign_component "${APP_BUNDLE}/Contents/Frameworks/Sparkle.framework"
 
