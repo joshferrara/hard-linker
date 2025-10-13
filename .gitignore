@@ -1,1 +1,29 @@
+# macOS metadata
+.DS_Store
+
+# Xcode / Swift build output
+.build/
+DerivedData/
+
+# Bundled application artifacts
+Hard-Linker.app/
+Hard\ Linker.zip
+
+# Source workspace and local docs
 Hardlinker.code-workspace
+GITHUB_SECRETS.md
+NEW_BUILD.md
+
+# Private keys
+sparkle_private_key
+
+# Local source tree (tracked in main repo only)
+Sources/
+
+# Generated release assets
+releases/
+
+# Temporary files
+*.tmp
+*.log
+*.swp
