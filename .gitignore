@@ -14,9 +14,18 @@ sparkle_private_key.txt
 
 # Release builds
 releases/
+/releases/tmp/
+/Hard-Linker-*.zip
+/Hard-Linker.zip
+/Hard\ Linker.zip
+/Hard-Linker.app/
+/Hard\ Linker.app/
 
 # Temporary files
 *.tmp
 *.log
 GITHUB_SECRETS.md
 NEW_BUILD.md
+
+# Local screenshots dropped into the repo root
+Screenshot*.png
