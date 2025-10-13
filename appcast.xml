@@ -1,7 +1,20 @@
 <?xml version="1.0" standalone="yes"?>
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
     <channel>
-        <title>Hard Linker</title>
+        <title>Hard-Linker</title>
+        <item>
+            <title>1.0.6</title>
+            <pubDate>Mon, 13 Oct 2025 11:02:50 -0500</pubDate>
+            <sparkle:version>6</sparkle:version>
+            <sparkle:shortVersionString>1.0.6</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.6/Hard-Linker-1.0.6.zip" length="2014420" type="application/octet-stream" sparkle:edSignature="GYJVnp/Qf8E33qF0nIAKCLOPPJy6tH59IsVflbBKjbWIpg1UYJuTMXjUBq/DfKyubkHRdXXL7rMll3vLhrDaCQ=="/>
+            <sparkle:deltas>
+                <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.6/Hard-Linker6-5.delta" sparkle:deltaFrom="5" length="11302" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="HjxgEXiarniSXakuk8dsbchzaFA2XoK8oIfXaF01hlaRwwncfl+gnNwd4Q8WjQGgnQAWJcB2X1cOko/lKL9+DQ=="/>
+                <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.6/Hard-Linker6-3.delta" sparkle:deltaFrom="3" length="11282" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="aKiEj3GyIMMpNF+PCmY+yHSrJczetABni8HNWpCU83rDVHJKFDOld8N5no9SHaFHfvFvC4Xw2Z6GwfQf+JqtDg=="/>
+                <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.6/Hard-Linker6-2.delta" sparkle:deltaFrom="2" length="11902" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="862864" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="ClQjryWdQVu2NSG5bnrBw/yR/Z92OYOIoum/lLfJ5lMi7jjAgpQsc2rkLexqzwzTOLqK03roTUCs3dO/UBLbCg=="/>
+            </sparkle:deltas>
+        </item>
         <item>
             <title>1.0.5</title>
             <pubDate>Sun, 12 Oct 2025 16:59:58 -0500</pubDate>
@@ -29,19 +42,19 @@
         </item>
         <item>
             <title>1.0.3</title>
-            <pubDate>Sun, 12 Oct 2025 14:48:18 -0500</pubDate>
-            <sparkle:version>4</sparkle:version>
+            <pubDate>Sun, 12 Oct 2025 17:06:06 -0500</pubDate>
+            <sparkle:version>3</sparkle:version>
             <sparkle:shortVersionString>1.0.3</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://joshferrara.github.io/hard-linker/Hard-Linker-1.0.3.zip" length="2015910" type="application/octet-stream" sparkle:edSignature="SR6yZIZ37HjladuO61NvxSfRnbj9Gl04f6qWwacIuMubC9cpjwukNVCl5gY0qriUJcwFDSVPbuSA6PZRjyOpDg=="/>
+            <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.3/Hard-Linker-1.0.3.zip" length="2015375" type="application/octet-stream" sparkle:edSignature="U6UvhsPws9h5YzdV5plIZd8saj360ij/M4SmCPCuGJ3/Ssh/bsdaDRgamu+MXwQH5LCmP3XJqheK3G7msTsYBA=="/>
         </item>
         <item>
             <title>1.0.2</title>
             <pubDate>Sun, 12 Oct 2025 14:04:48 -0500</pubDate>
-            <sparkle:version>3</sparkle:version>
-            <sparkle:shortVersionString>1.0.3</sparkle:shortVersionString>
+            <sparkle:version>2</sparkle:version>
+            <sparkle:shortVersionString>1.0.2</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://joshferrara.github.io/hard-linker/Hard-Linker-1.0.3.zip" length="2015375" type="application/octet-stream" sparkle:edSignature="U6UvhsPws9h5YzdV5plIZd8saj360ij/M4SmCPCuGJ3/Ssh/bsdaDRgamu+MXwQH5LCmP3XJqheK3G7msTsYBA=="/>
+            <enclosure url="https://github.com/joshferrara/hard-linker/releases/download/v1.0.2/Hard-Linker-1.0.2.zip" length="2015365" type="application/octet-stream" sparkle:edSignature="BdxggN9Y2XURg5OSvH1y19GaJUznMKOtM9ElTT1O9ApsyhUCIdPQoBtBJ7W7PzzB1jnrwltyFjKgAUQN3dG1BQ=="/>
         </item>
     </channel>
 </rss>
