@@ -42,10 +42,12 @@ sign_component() {
         exit 1
     fi
 
+    # Do not preserve the upstream entitlements here; Sparkle bundles are signed
+    # with the project's team identifier. Preserving their metadata leaves the
+    # original application-identifier in place and produces an invalid signature.
     codesign --force --options runtime \
         --timestamp \
         --sign "${SIGNING_IDENTITY}" \
-        --preserve-metadata=entitlements,requirements \
         "${component_path}"
 }
 
