@@ -7,20 +7,20 @@
 
     <!-- Primary Meta Tags -->
     <meta name="title" content="Hard Linker - macOS Hard Link Creator">
-    <meta name="description" content="Create hard links between folders on macOS with a native SwiftUI interface. Space-efficient file linking for developers, power users, and system administrators.">
+    <meta name="description" content="Create hard links between files and folders on macOS with a native SwiftUI interface. Space-efficient file linking for developers, power users, and system administrators.">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://joshferrara.github.io/hard-linker/">
     <meta property="og:title" content="Hard Linker - macOS Hard Link Creator">
-    <meta property="og:description" content="Create hard links between folders on macOS with a native SwiftUI interface. Space-efficient file linking for developers, power users, and system administrators.">
+    <meta property="og:description" content="Create hard links between files and folders on macOS with a native SwiftUI interface. Space-efficient file linking for developers, power users, and system administrators.">
     <meta property="og:image" content="https://joshferrara.github.io/hard-linker/Icon-iOS-Default-1024x1024@1x.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://joshferrara.github.io/hard-linker/">
     <meta property="twitter:title" content="Hard Linker - macOS Hard Link Creator">
-    <meta property="twitter:description" content="Create hard links between folders on macOS with a native SwiftUI interface. Space-efficient file linking for developers, power users, and system administrators.">
+    <meta property="twitter:description" content="Create hard links between files and folders on macOS with a native SwiftUI interface. Space-efficient file linking for developers, power users, and system administrators.">
     <meta property="twitter:image" content="https://joshferrara.github.io/hard-linker/Icon-iOS-Default-1024x1024@1x.png">
 
     <!-- Additional Meta Tags -->
@@ -50,7 +50,9 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
+            background: linear-gradient(-45deg, #0a0a0a, #050505, #0a0a0a);
+            background-size: 400% 400%;
+            animation: bgShift 20s ease infinite;
             color: var(--text-primary);
             line-height: 1.6;
             overflow-x: hidden;
@@ -190,7 +192,7 @@
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 2rem;
         }
 
@@ -322,6 +324,18 @@
             }
         }
 
+        @keyframes bgShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
         .feature-card:nth-child(1) { animation-delay: 0.1s; }
         .feature-card:nth-child(2) { animation-delay: 0.2s; }
         .feature-card:nth-child(3) { animation-delay: 0.3s; }
@@ -398,8 +412,8 @@
             <div class="container">
                 <h2>Space-Efficient File Linking</h2>
                 <p class="subtitle">
-                    Create hard links between folders on macOS with a native SwiftUI interface.
-                    Perfect for developers, power users, and system administrators.
+                Create hard links between files and folders on macOS with a native SwiftUI interface.
+                Perfect for developers, power users, and system administrators.
                 </p>
                 <a href="https://github.com/joshferrara/hard-linker/releases/download/v1.0.6/Hard-Linker-1.0.6.zip" class="cta-button">
                     Download Hard Linker v1.0.6
@@ -422,8 +436,8 @@
             <div class="container">
                 <h3>Native macOS Interface</h3>
                 <p class="description">
-                    Clean, intuitive SwiftUI design that feels right at home on macOS.
-                    Drag folders directly into the app or use the file picker for precise control.
+                Clean, intuitive SwiftUI design that feels right at home on macOS.
+                Drag files/folders directly into the app or use the file picker for precise control.
                 </p>
                 <div class="screenshot-container">
                     <img src="app-screenshot.png" alt="Hard Linker App Interface" class="app-screenshot">
@@ -438,13 +452,13 @@
                     <div class="feature-card fade-in">
                         <div class="feature-icon">🎯</div>
                         <h4>Drag & Drop Interface</h4>
-                        <p>Intuitive macOS-native interface. Simply drag source folders and destination into the app, or use the built-in file picker for precise selection.</p>
+                        <p>Intuitive macOS-native interface. Simply drag source files/folders and destination into the app, or use the built-in file picker for precise selection.</p>
                     </div>
 
                     <div class="feature-card fade-in">
                         <div class="feature-icon">⚡</div>
                         <h4>Multiple Sources</h4>
-                        <p>Link multiple source folders to a single destination in one operation. Perfect for organizing complex directory structures efficiently.</p>
+                        <p>Link multiple source files/folders to a single destination in one operation. Perfect for organizing complex directory structures efficiently.</p>
                     </div>
 
                     <div class="feature-card fade-in">
