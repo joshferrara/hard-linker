@@ -16,10 +16,10 @@ struct HardLinkCreatorApp: App {
     }
 
     var body: some Scene {
-        WindowGroup {
+        WindowGroup("") {
             ContentView()
         }
-        .windowStyle(.hiddenTitleBar)
+        .defaultSize(CGSize(width: 760, height: 620))
         .windowResizability(.contentSize)
         .commands {
             CommandGroup(after: .appInfo) {
@@ -30,6 +30,7 @@ struct HardLinkCreatorApp: App {
 }
 
 struct ContentView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @State private var sourceFolders: [URL] = []
     @State private var destinationFolder: URL?
     @State private var status: OperationStatus?
@@ -40,182 +41,149 @@ struct ContentView: View {
     @State private var isDestinationDropTargeted = false
 
     var body: some View {
-        ZStack {
-            LiquidGlassWindowBackground()
+        VStack(spacing: 0) {
+            ZStack {
+                WindowSurfaceBackground()
 
-            VStack(alignment: .leading, spacing: 18) {
-                header
-                sourceSection
-                destinationSection
-                createButton
-                statusView
+                VStack(alignment: .leading, spacing: 18) {
+                    sourceSection
+                    destinationSection
+                    statusView
 
-                Spacer(minLength: 0)
+                    Spacer(minLength: 0)
+                }
+                .padding(.horizontal, 28)
+                .padding(.top, 28)
+                .padding(.bottom, 24)
             }
-            .padding(.horizontal, 24)
-            .padding(.top, 24)
-            .padding(.bottom, 22)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            Divider()
+
+            footer
         }
-        .frame(minWidth: 580, idealWidth: 620, minHeight: 610, idealHeight: 640)
-        .clipShape(RoundedRectangle(cornerRadius: AppChrome.windowCornerRadius, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: AppChrome.windowCornerRadius, style: .continuous)
-                .strokeBorder(.white.opacity(0.32), lineWidth: 1)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Color.clear
+                    .frame(width: 0, height: 0)
+                    .accessibilityHidden(true)
+            }
         }
-        .background {
-            WindowConfigurator(cornerRadius: AppChrome.windowCornerRadius)
-        }
+        .background(WindowSurfaceBackground())
+        .background(WindowAppearanceConfigurator())
+        .frame(minWidth: 600, idealWidth: 760, minHeight: 430, idealHeight: 620)
     }
 
     private var canCreateLinks: Bool {
         !sourceFolders.isEmpty && destinationFolder != nil && !isCreatingLinks
     }
 
-    private var header: some View {
-        HStack(alignment: .center, spacing: 16) {
-            VStack(alignment: .leading, spacing: 5) {
-                Text("Hard Linker")
-                    .font(.system(.title2, design: .rounded, weight: .semibold))
-                    .foregroundStyle(.primary)
-                Text("Create space-efficient hard-linked copies with native macOS controls.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-            .padding(.leading, 72)
-
-            Spacer(minLength: 12)
-
-            Image(systemName: "link.badge.plus")
-                .font(.system(size: 22, weight: .semibold))
-                .symbolRenderingMode(.hierarchical)
-                .foregroundStyle(.tint)
-                .frame(width: 42, height: 42)
-                .background(.thinMaterial, in: Circle())
-                .overlay {
-                    Circle()
-                        .strokeBorder(.white.opacity(0.36), lineWidth: 1)
-                }
-        }
-        .padding(.bottom, 2)
-    }
-
     private var sourceSection: some View {
-        GlassPanel {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 10) {
-                    Label("Sources", systemImage: "tray.and.arrow.down")
-                        .font(.headline)
-                    Spacer()
-                    if !sourceFolders.isEmpty {
-                        Text("\(sourceFolders.count) selected")
-                            .font(.caption.weight(.medium))
-                            .foregroundStyle(.secondary)
-                            .padding(.horizontal, 9)
-                            .padding(.vertical, 4)
-                            .background(.thinMaterial, in: Capsule())
-                    }
-                    Button {
-                        guard !isCreatingLinks else { return }
-                        showingSourcePicker = true
-                    } label: {
-                        Label("Add", systemImage: "plus")
-                    }
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
-                    .disabled(isCreatingLinks)
-                }
-
-                dropZone(minHeight: 162, isTargeted: isSourceDropTargeted) {
-                    if sourceFolders.isEmpty {
-                        EmptyDropContent(
-                            systemImage: "doc.badge.plus",
-                            title: "Drop files or folders here",
-                            subtitle: "or choose them from Finder"
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 10) {
+                Label("Sources", systemImage: "tray.and.arrow.down")
+                    .font(.headline)
+                Spacer()
+                if !sourceFolders.isEmpty {
+                    Text("\(sourceFolders.count) selected")
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(
+                            Capsule()
+                                .fill(Color.secondary.opacity(0.13))
                         )
-                    } else {
-                        ScrollView {
-                            LazyVStack(alignment: .leading, spacing: 8) {
-                                ForEach(sourceFolders, id: \.self) { source in
-                                    sourceRow(source)
-                                }
+                }
+            }
+
+            dropZone(minHeight: 150, isTargeted: isSourceDropTargeted) {
+                if sourceFolders.isEmpty {
+                    EmptyDropContent(
+                        systemImage: "doc.badge.plus",
+                        title: "Drop files or folders here",
+                        subtitle: "Click to choose from Finder"
+                    )
+                } else {
+                    ScrollView {
+                        LazyVStack(alignment: .leading, spacing: 6) {
+                            ForEach(sourceFolders, id: \.self) { source in
+                                sourceRow(source)
                             }
-                            .padding(10)
                         }
-                        .frame(maxHeight: 202)
+                        .padding(8)
                     }
+                    .frame(maxHeight: 164)
                 }
-                .onTapGesture {
-                    guard !isCreatingLinks else { return }
-                    showingSourcePicker = true
-                }
-                .onDrop(of: [UTType.fileURL], isTargeted: $isSourceDropTargeted) { providers in
-                    handleSourceDrop(providers: providers)
-                }
-                .fileImporter(isPresented: $showingSourcePicker, allowedContentTypes: [UTType.item], allowsMultipleSelection: true) { result in
-                    handleSourcePickerResult(result)
-                }
+            }
+            .onTapGesture {
+                guard !isCreatingLinks else { return }
+                showingSourcePicker = true
+            }
+            .onDrop(of: [UTType.fileURL], isTargeted: $isSourceDropTargeted) { providers in
+                handleSourceDrop(providers: providers)
+            }
+            .fileImporter(isPresented: $showingSourcePicker, allowedContentTypes: [UTType.item], allowsMultipleSelection: true) { result in
+                handleSourcePickerResult(result)
             }
         }
     }
 
     private var destinationSection: some View {
-        GlassPanel {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 10) {
-                    Label("Destination", systemImage: "folder")
-                        .font(.headline)
-                    Spacer()
-                    Button {
-                        guard !isCreatingLinks else { return }
-                        showingDestinationPicker = true
-                    } label: {
-                        Label(destinationFolder == nil ? "Choose" : "Change", systemImage: "folder.badge.plus")
-                    }
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
-                    .disabled(isCreatingLinks)
-                }
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 10) {
+                Label("Destination", systemImage: "folder")
+                    .font(.headline)
+                Spacer()
+            }
 
-                dropZone(minHeight: 100, isTargeted: isDestinationDropTargeted) {
-                    if let destinationFolder {
-                        HStack(spacing: 12) {
-                            Image(systemName: "folder.fill")
-                                .font(.title3)
-                                .symbolRenderingMode(.hierarchical)
-                                .foregroundStyle(.tint)
-                                .frame(width: 30, height: 30)
-                                .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            dropZone(minHeight: 106, isTargeted: isDestinationDropTargeted) {
+                if let destinationFolder {
+                    HStack(spacing: 12) {
+                        Image(systemName: "folder.fill")
+                            .font(.title3)
+                            .symbolRenderingMode(.hierarchical)
+                            .foregroundStyle(.tint)
+                            .frame(width: 28, height: 28)
 
-                            pathLabel(for: destinationFolder)
+                        pathLabel(for: destinationFolder)
 
-                            Spacer(minLength: 8)
+                        Spacer(minLength: 8)
 
-                            removeButton {
-                                self.destinationFolder = nil
-                                status = nil
-                            }
+                        removeButton {
+                            self.destinationFolder = nil
+                            status = nil
                         }
-                        .padding(12)
-                    } else {
-                        EmptyDropContent(
-                            systemImage: "folder.badge.plus",
-                            title: "Drop a destination folder here",
-                            subtitle: "linked copies will be created inside it"
-                        )
                     }
-                }
-                .onTapGesture {
-                    guard !isCreatingLinks else { return }
-                    showingDestinationPicker = true
-                }
-                .onDrop(of: [UTType.fileURL], isTargeted: $isDestinationDropTargeted) { providers in
-                    handleDestinationDrop(providers: providers)
-                }
-                .fileImporter(isPresented: $showingDestinationPicker, allowedContentTypes: [UTType.folder], allowsMultipleSelection: false) { result in
-                    handleDestinationPickerResult(result)
+                    .padding(12)
+                } else {
+                    EmptyDropContent(
+                        systemImage: "folder.badge.plus",
+                        title: "Drop a destination folder here",
+                        subtitle: "Click to choose from Finder"
+                    )
                 }
             }
+            .onTapGesture {
+                guard !isCreatingLinks else { return }
+                showingDestinationPicker = true
+            }
+            .onDrop(of: [UTType.fileURL], isTargeted: $isDestinationDropTargeted) { providers in
+                handleDestinationDrop(providers: providers)
+            }
+            .fileImporter(isPresented: $showingDestinationPicker, allowedContentTypes: [UTType.folder], allowsMultipleSelection: false) { result in
+                handleDestinationPickerResult(result)
+            }
         }
+    }
+
+    private var footer: some View {
+        HStack {
+            createButton
+        }
+        .padding(.horizontal, 28)
+        .padding(.vertical, 16)
+        .background(Color(nsColor: .controlBackgroundColor))
     }
 
     private var createButton: some View {
@@ -229,10 +197,10 @@ struct ContentView: View {
                 }
                 Text(isCreatingLinks ? "Creating Links..." : "Create Hard Links")
             }
+            .font(.headline)
             .frame(maxWidth: .infinity)
         }
-        .buttonStyle(LiquidPrimaryButtonStyle())
-        .controlSize(.large)
+        .buttonStyle(PrimaryActionButtonStyle())
         .disabled(!canCreateLinks)
     }
 
@@ -254,12 +222,11 @@ struct ContentView: View {
                 Spacer(minLength: 0)
             }
             .padding(12)
-            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .background(status.color.opacity(colorScheme == .dark ? 0.14 : 0.10), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
             .overlay {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .strokeBorder(status.color.opacity(0.34), lineWidth: 1)
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .strokeBorder(status.color.opacity(0.26), lineWidth: 1)
             }
-            .shadow(color: status.color.opacity(0.08), radius: 12, y: 6)
             .accessibilityElement(children: .combine)
         }
     }
@@ -280,19 +247,23 @@ struct ContentView: View {
                 status = nil
             }
         }
-        .padding(.vertical, 8)
+        .padding(.vertical, 7)
         .padding(.horizontal, 10)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .background(rowBackground, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
         .overlay {
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .strokeBorder(.white.opacity(0.26), lineWidth: 1)
+                .strokeBorder(Color(nsColor: .separatorColor).opacity(0.30), lineWidth: 1)
         }
+    }
+
+    private var rowBackground: Color {
+        Color(nsColor: .controlBackgroundColor).opacity(colorScheme == .dark ? 0.48 : 0.82)
     }
 
     private func pathLabel(for url: URL) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(url.lastPathComponent)
-                .font(.system(.body, design: .rounded))
+                .font(.body)
                 .lineLimit(1)
                 .truncationMode(.middle)
             Text(url.displayPath)
@@ -308,7 +279,7 @@ struct ContentView: View {
             Image(systemName: "xmark.circle.fill")
                 .imageScale(.medium)
         }
-        .buttonStyle(GlassIconButtonStyle())
+        .buttonStyle(IconButtonStyle())
         .disabled(isCreatingLinks)
         .help("Remove")
         .accessibilityLabel("Remove")
@@ -320,37 +291,33 @@ struct ContentView: View {
         @ViewBuilder content: () -> Content
     ) -> some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(.ultraThinMaterial)
+            RoundedRectangle(cornerRadius: 30, style: .continuous)
+                .fill(dropZoneBackground)
                 .overlay {
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .fill(
-                            LinearGradient(
-                                colors: [
-                                    Color.accentColor.opacity(isTargeted ? 0.18 : 0.08),
-                                    Color.cyan.opacity(isTargeted ? 0.12 : 0.04),
-                                    Color.orange.opacity(isTargeted ? 0.10 : 0.03)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .blendMode(.plusLighter)
+                    if isTargeted {
+                        RoundedRectangle(cornerRadius: 30, style: .continuous)
+                            .fill(Color.accentColor.opacity(colorScheme == .dark ? 0.16 : 0.09))
+                    }
                 }
                 .overlay {
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    RoundedRectangle(cornerRadius: 30, style: .continuous)
                         .strokeBorder(
-                            isTargeted ? Color.accentColor.opacity(0.66) : Color.white.opacity(0.30),
-                            style: StrokeStyle(lineWidth: isTargeted ? 2 : 1, dash: isTargeted ? [] : [7, 6])
+                            isTargeted ? Color.accentColor.opacity(0.70) : Color(nsColor: .separatorColor).opacity(0.24),
+                            style: StrokeStyle(lineWidth: isTargeted ? 2 : 1, dash: isTargeted ? [] : [8, 8])
                         )
                 }
+                .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.20 : 0.07), radius: 8, x: 0, y: 3)
 
             content()
-                .padding(8)
+                .padding(10)
         }
         .frame(minHeight: minHeight)
-        .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
         .animation(.easeInOut(duration: 0.18), value: isTargeted)
+    }
+
+    private var dropZoneBackground: Color {
+        Color(nsColor: .textBackgroundColor).opacity(colorScheme == .dark ? 0.36 : 0.86)
     }
 
     private func handleSourceDrop(providers: [NSItemProvider]) -> Bool {
@@ -458,138 +425,27 @@ struct ContentView: View {
     }
 }
 
-private enum AppChrome {
-    static let windowCornerRadius: CGFloat = 28
-    static let panelCornerRadius: CGFloat = 22
-}
-
-private struct LiquidGlassWindowBackground: View {
+private struct WindowSurfaceBackground: View {
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         Rectangle()
-            .fill(.ultraThinMaterial)
+            .fill(Color(nsColor: .windowBackgroundColor))
             .overlay {
                 LinearGradient(
                     colors: [
-                        Color.accentColor.opacity(colorScheme == .dark ? 0.22 : 0.16),
-                        Color.cyan.opacity(colorScheme == .dark ? 0.16 : 0.12),
-                        Color.orange.opacity(colorScheme == .dark ? 0.10 : 0.08)
+                        Color.white.opacity(colorScheme == .dark ? 0.02 : 0.24),
+                        Color.accentColor.opacity(colorScheme == .dark ? 0.05 : 0.035),
+                        Color.black.opacity(colorScheme == .dark ? 0.16 : 0.02)
                     ],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
             }
-            .overlay {
-                Color(nsColor: .windowBackgroundColor)
-                    .opacity(colorScheme == .dark ? 0.10 : 0.20)
-            }
     }
 }
 
-private struct GlassPanel<Content: View>: View {
-    @Environment(\.colorScheme) private var colorScheme
-    let content: Content
-
-    init(@ViewBuilder content: () -> Content) {
-        self.content = content()
-    }
-
-    var body: some View {
-        content
-            .padding(16)
-            .background {
-                RoundedRectangle(cornerRadius: AppChrome.panelCornerRadius, style: .continuous)
-                    .fill(.thinMaterial)
-                    .overlay {
-                        RoundedRectangle(cornerRadius: AppChrome.panelCornerRadius, style: .continuous)
-                            .fill(
-                                LinearGradient(
-                                    colors: [
-                                        .white.opacity(colorScheme == .dark ? 0.10 : 0.36),
-                                        Color.accentColor.opacity(colorScheme == .dark ? 0.08 : 0.05),
-                                        .clear
-                                    ],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                    }
-            }
-            .overlay {
-                RoundedRectangle(cornerRadius: AppChrome.panelCornerRadius, style: .continuous)
-                    .strokeBorder(.white.opacity(colorScheme == .dark ? 0.16 : 0.42), lineWidth: 1)
-            }
-            .shadow(color: .black.opacity(colorScheme == .dark ? 0.20 : 0.08), radius: 20, x: 0, y: 12)
-    }
-}
-
-private struct LiquidPrimaryButtonStyle: ButtonStyle {
-    @Environment(\.isEnabled) private var isEnabled
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.headline)
-            .foregroundStyle(isEnabled ? Color.white : Color.secondary)
-            .tint(isEnabled ? .white : .secondary)
-            .padding(.vertical, 12)
-            .frame(maxWidth: .infinity)
-            .background {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: isEnabled
-                                ? [Color.accentColor, Color.cyan.opacity(0.82)]
-                                : [Color.secondary.opacity(0.18), Color.secondary.opacity(0.10)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(.white.opacity(configuration.isPressed && isEnabled ? 0.10 : 0.0))
-                    }
-            }
-            .overlay {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .strokeBorder(.white.opacity(isEnabled ? 0.38 : 0.16), lineWidth: 1)
-            }
-            .shadow(color: Color.accentColor.opacity(isEnabled ? 0.22 : 0), radius: 14, y: 8)
-            .scaleEffect(configuration.isPressed && isEnabled ? 0.99 : 1)
-            .opacity(isEnabled ? 1 : 0.68)
-            .animation(.easeInOut(duration: 0.12), value: configuration.isPressed)
-            .animation(.easeInOut(duration: 0.16), value: isEnabled)
-    }
-}
-
-private struct GlassIconButtonStyle: ButtonStyle {
-    @Environment(\.isEnabled) private var isEnabled
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .foregroundStyle(isEnabled ? Color.secondary : Color.secondary.opacity(0.45))
-            .frame(width: 28, height: 28)
-            .background {
-                Circle()
-                    .fill(.thinMaterial)
-                    .overlay {
-                        Circle()
-                            .fill(Color.secondary.opacity(configuration.isPressed ? 0.12 : 0.05))
-                    }
-            }
-            .overlay {
-                Circle()
-                    .strokeBorder(.white.opacity(0.24), lineWidth: 1)
-            }
-            .scaleEffect(configuration.isPressed && isEnabled ? 0.94 : 1)
-            .opacity(isEnabled ? 1 : 0.6)
-            .animation(.easeInOut(duration: 0.12), value: configuration.isPressed)
-    }
-}
-
-private struct WindowConfigurator: NSViewRepresentable {
-    let cornerRadius: CGFloat
-
+private struct WindowAppearanceConfigurator: NSViewRepresentable {
     func makeNSView(context: Context) -> NSView {
         let view = NSView()
         DispatchQueue.main.async {
@@ -605,20 +461,62 @@ private struct WindowConfigurator: NSViewRepresentable {
     }
 
     private func configure(window: NSWindow?) {
-        guard let window else { return }
+        window?.titlebarSeparatorStyle = .none
+    }
+}
 
-        window.titleVisibility = .hidden
-        window.titlebarAppearsTransparent = true
-        window.isMovableByWindowBackground = true
-        window.isOpaque = false
-        window.backgroundColor = .clear
-        window.styleMask.insert(.fullSizeContentView)
+private struct IconButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
 
-        guard let contentView = window.contentView else { return }
-        contentView.wantsLayer = true
-        contentView.layer?.cornerRadius = cornerRadius
-        contentView.layer?.cornerCurve = .continuous
-        contentView.layer?.masksToBounds = true
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundStyle(isEnabled ? Color.secondary : Color.secondary.opacity(0.45))
+            .frame(width: 24, height: 24)
+            .background {
+                Circle()
+                    .fill(Color.secondary.opacity(configuration.isPressed ? 0.13 : 0.06))
+            }
+            .scaleEffect(configuration.isPressed && isEnabled ? 0.94 : 1)
+            .opacity(isEnabled ? 1 : 0.6)
+            .animation(.easeInOut(duration: 0.12), value: configuration.isPressed)
+    }
+}
+
+private struct PrimaryActionButtonStyle: ButtonStyle {
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundStyle(isEnabled ? Color.white : Color.secondary)
+            .padding(.vertical, 9)
+            .frame(maxWidth: .infinity, minHeight: 36)
+            .background {
+                RoundedRectangle(cornerRadius: 11, style: .continuous)
+                    .fill(backgroundColor(isPressed: configuration.isPressed))
+            }
+            .overlay {
+                RoundedRectangle(cornerRadius: 11, style: .continuous)
+                    .strokeBorder(borderColor, lineWidth: 1)
+            }
+            .contentShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
+            .scaleEffect(configuration.isPressed && isEnabled ? 0.99 : 1)
+            .animation(.easeInOut(duration: 0.12), value: configuration.isPressed)
+            .animation(.easeInOut(duration: 0.16), value: isEnabled)
+    }
+
+    private func backgroundColor(isPressed: Bool) -> Color {
+        if isEnabled {
+            return Color.accentColor.opacity(isPressed ? 0.84 : 1)
+        }
+
+        return Color(nsColor: .controlBackgroundColor).opacity(colorScheme == .dark ? 0.36 : 0.72)
+    }
+
+    private var borderColor: Color {
+        isEnabled
+            ? Color.white.opacity(colorScheme == .dark ? 0.20 : 0.34)
+            : Color(nsColor: .separatorColor).opacity(0.42)
     }
 }
 
@@ -628,17 +526,12 @@ private struct EmptyDropContent: View {
     let subtitle: String
 
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 7) {
             Image(systemName: systemImage)
-                .font(.system(size: 27, weight: .semibold))
+                .font(.system(size: 24, weight: .semibold))
                 .symbolRenderingMode(.hierarchical)
                 .foregroundStyle(.tint)
-                .frame(width: 46, height: 46)
-                .background(.thinMaterial, in: Circle())
-                .overlay {
-                    Circle()
-                        .strokeBorder(.white.opacity(0.28), lineWidth: 1)
-                }
+                .frame(width: 38, height: 38)
             Text(title)
                 .font(.subheadline.weight(.medium))
                 .foregroundStyle(.primary)
@@ -649,7 +542,7 @@ private struct EmptyDropContent: View {
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 18)
+        .padding(.vertical, 14)
     }
 }
 
