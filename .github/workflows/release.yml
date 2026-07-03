@@ -13,9 +13,12 @@ on:
         description: 'Build number'
         required: true
 
+permissions:
+  contents: write
+
 jobs:
   build-and-release:
-    runs-on: macos-latest
+    runs-on: macos-15
 
     steps:
       - name: Checkout code
@@ -26,6 +29,39 @@ jobs:
 
       - name: Resolve dependencies
         run: swift package resolve
+
+      - name: Validate release secrets
+        env:
+          MACOS_CERTIFICATE_BASE64: ${{ secrets.MACOS_CERTIFICATE_BASE64 }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          SIGNING_IDENTITY: ${{ secrets.SIGNING_IDENTITY }}
+          NOTARIZATION_APPLE_ID: ${{ secrets.NOTARIZATION_APPLE_ID }}
+          NOTARIZATION_TEAM_ID: ${{ secrets.NOTARIZATION_TEAM_ID }}
+          NOTARIZATION_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          missing=()
+          for name in \
+            MACOS_CERTIFICATE_BASE64 \
+            MACOS_CERTIFICATE_PASSWORD \
+            KEYCHAIN_PASSWORD \
+            SIGNING_IDENTITY \
+            NOTARIZATION_APPLE_ID \
+            NOTARIZATION_TEAM_ID \
+            NOTARIZATION_PASSWORD \
+            SPARKLE_PRIVATE_KEY
+          do
+            if [ -z "${!name}" ]; then
+              missing+=("$name")
+            fi
+          done
+
+          if [ "${#missing[@]}" -gt 0 ]; then
+            printf 'Missing required release secrets:\n'
+            printf ' - %s\n' "${missing[@]}"
+            exit 1
+          fi
 
       - name: Import Code Signing Certificate
         env:
@@ -76,16 +112,10 @@ jobs:
             echo "BUILD_NUMBER=${{ github.run_number }}" >> $GITHUB_OUTPUT
           fi
 
-      - name: Update build script configuration
-        env:
-          SIGNING_IDENTITY: ${{ secrets.SIGNING_IDENTITY }}
-        run: |
-          # Update signing identity in build script
-          sed -i '' 's/SIGNING_IDENTITY=".*"/SIGNING_IDENTITY="'"$SIGNING_IDENTITY"'"/' build-and-release.sh
-
       - name: Build, Sign, and Notarize
         env:
           KEYCHAIN_PROFILE: notarytool-profile
+          SIGNING_IDENTITY: ${{ secrets.SIGNING_IDENTITY }}
         run: |
           chmod +x build-and-release.sh
           ./build-and-release.sh \
@@ -93,7 +123,7 @@ jobs:
             -b ${{ steps.version.outputs.BUILD_NUMBER }}
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.version.outputs.VERSION }}
           name: Hard Linker v${{ steps.version.outputs.VERSION }}
