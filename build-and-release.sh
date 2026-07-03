@@ -12,9 +12,12 @@ BUNDLE_ID="com.hardlinker.app"
 VERSION=""
 BUILD_NUMBER=""
 ENTITLEMENTS="Sources/HardLinkCreator/Entitlements.plist"
-SIGNING_IDENTITY="Developer ID Application: Hivemind Labs, Inc. (684MMQ8PLC)"
-KEYCHAIN_PROFILE="hivemindlabs"  # You'll need to set this up with: xcrun notarytool store-credentials
-SPARKLE_PRIVATE_KEY="sparkle_private_key"  # Path to your Sparkle private key
+APP_ICON="AppIcon.icns"
+SIGNING_IDENTITY="${SIGNING_IDENTITY:-Developer ID Application: Hivemind Labs, Inc. (684MMQ8PLC)}"
+KEYCHAIN_PROFILE="${KEYCHAIN_PROFILE:-hivemindlabs}"  # Set up with: xcrun notarytool store-credentials
+SPARKLE_PRIVATE_KEY="${SPARKLE_PRIVATE_KEY:-sparkle_private_key}"  # Path to your Sparkle private key
+SPARKLE_PUBLIC_ED_KEY="N4HJPxwDFLFXsF+wZO0gg5TpW0fejZwpe4aEEtSB+2k="
+SPARKLE_FEED_URL="https://joshferrara.github.io/hard-linker/appcast.xml"
 RELEASES_DIR="releases"
 
 # Colors for output
@@ -51,6 +54,82 @@ sign_component() {
         "${component_path}"
 }
 
+prepare_app_bundle() {
+    if [ ! -f "${APP_ICON}" ]; then
+        echo_error "App icon not found: ${APP_ICON}"
+        exit 1
+    fi
+
+    rm -rf "${APP_BUNDLE}"
+    mkdir -p \
+        "${APP_BUNDLE}/Contents/MacOS" \
+        "${APP_BUNDLE}/Contents/Resources" \
+        "${APP_BUNDLE}/Contents/Frameworks"
+
+    cp "${APP_ICON}" "${APP_BUNDLE}/Contents/Resources/AppIcon.icns"
+
+    cat > "${APP_BUNDLE}/Contents/Info.plist" <<PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDisplayName</key>
+    <string>${APP_NAME}</string>
+    <key>CFBundleExecutable</key>
+    <string>${APP_NAME}</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
+    <key>CFBundleIdentifier</key>
+    <string>${BUNDLE_ID}</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>${APP_NAME}</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>${VERSION}</string>
+    <key>CFBundleVersion</key>
+    <string>${BUILD_NUMBER}</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>13.0</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright (c) 2025 Josh Ferrara. All rights reserved.</string>
+    <key>SUEnableAutomaticChecks</key>
+    <true/>
+    <key>SUEnableInstallerLauncherService</key>
+    <true/>
+    <key>SUFeedURL</key>
+    <string>${SPARKLE_FEED_URL}</string>
+    <key>SUPublicEDKey</key>
+    <string>${SPARKLE_PUBLIC_ED_KEY}</string>
+</dict>
+</plist>
+PLIST
+}
+
+verify_embedded_dependencies() {
+    local app_executable="${APP_BUNDLE}/Contents/MacOS/${APP_NAME}"
+    local sparkle_binary="${APP_BUNDLE}/Contents/Frameworks/Sparkle.framework/Versions/B/Sparkle"
+
+    if ! otool -L "${app_executable}" | grep -q "@rpath/Sparkle.framework/Versions/B/Sparkle"; then
+        echo_error "App executable is not linked against Sparkle"
+        exit 1
+    fi
+
+    if ! otool -l "${app_executable}" | grep -q "@loader_path/../Frameworks"; then
+        echo_error "App executable is missing the Frameworks rpath"
+        exit 1
+    fi
+
+    if [ ! -f "${sparkle_binary}" ]; then
+        echo_error "Sparkle framework binary is missing from the app bundle"
+        exit 1
+    fi
+}
+
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -81,10 +160,9 @@ fi
 
 echo_info "Building Hard Linker v${VERSION} (build ${BUILD_NUMBER})"
 
-# Step 1: Update version in Info.plist
-echo_info "Updating version information..."
-/usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${VERSION}" "${APP_BUNDLE}/Contents/Info.plist"
-/usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${BUILD_NUMBER}" "${APP_BUNDLE}/Contents/Info.plist"
+# Step 1: Create a fresh app bundle
+echo_info "Preparing app bundle..."
+prepare_app_bundle
 
 # Step 2: Clean and build release
 echo_info "Building release binary..."
@@ -96,19 +174,27 @@ cp ".build/release/HardLinkCreator" "${APP_BUNDLE}/Contents/MacOS/${APP_NAME}"
 
 # Step 3.5: Update binary rpath to point to Frameworks directory
 echo_info "Updating binary rpath..."
-install_name_tool -add_rpath "@loader_path/../Frameworks" "${APP_BUNDLE}/Contents/MacOS/${APP_NAME}"
+if otool -l "${APP_BUNDLE}/Contents/MacOS/${APP_NAME}" | grep -q "@loader_path/../Frameworks"; then
+    echo_info "Frameworks rpath already present"
+else
+    install_name_tool -add_rpath "@loader_path/../Frameworks" "${APP_BUNDLE}/Contents/MacOS/${APP_NAME}"
+fi
 
 # Step 3.6: Copy Sparkle framework to app bundle
 echo_info "Copying Sparkle framework to app bundle..."
 SPARKLE_FW=".build/artifacts/sparkle/Sparkle/Sparkle.xcframework/macos-arm64_x86_64/Sparkle.framework"
 if [ -d "${SPARKLE_FW}" ]; then
     mkdir -p "${APP_BUNDLE}/Contents/Frameworks"
+    rm -rf "${APP_BUNDLE}/Contents/Frameworks/Sparkle.framework"
     cp -R "${SPARKLE_FW}" "${APP_BUNDLE}/Contents/Frameworks/"
     echo_info "Sparkle framework copied"
 else
     echo_error "Sparkle framework not found"
     exit 1
 fi
+
+echo_info "Verifying embedded dependencies..."
+verify_embedded_dependencies
 
 # Step 4: Code sign the app bundle
 echo_info "Code signing application..."
@@ -147,17 +233,11 @@ xcrun notarytool submit "${ARCHIVE_PATH}" \
 
 # Step 7: Staple the notarization ticket
 echo_info "Stapling notarization ticket..."
-# Extract, staple, and re-zip
-TEMP_DIR=$(mktemp -d)
-unzip -q "${ARCHIVE_PATH}" -d "${TEMP_DIR}"
-xcrun stapler staple "${TEMP_DIR}/${APP_BUNDLE}"
-cd "${TEMP_DIR}"
+xcrun stapler staple "${APP_BUNDLE}"
 ditto -c -k --keepParent --norsrc "${APP_BUNDLE}" "${ARCHIVE_PATH}"
-cd - > /dev/null
-rm -rf "${TEMP_DIR}"
 
 echo_info "Verifying notarization..."
-spctl --assess -vv --type install "${APP_BUNDLE}"
+spctl --assess -vv --type execute "${APP_BUNDLE}"
 
 # Step 8: Generate appcast with Sparkle
 echo_info "Generating appcast..."

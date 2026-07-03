@@ -22,5 +22,9 @@ let package = Package(
             ],
             exclude: ["Entitlements.plist"]
         ),
+        .testTarget(
+            name: "HardLinkCreatorTests",
+            dependencies: ["HardLinkCreator"]
+        ),
     ]
 )
