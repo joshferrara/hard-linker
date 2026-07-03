@@ -18,7 +18,7 @@ KEYCHAIN_PROFILE="${KEYCHAIN_PROFILE:-hivemindlabs}"  # Set up with: xcrun notar
 SPARKLE_PRIVATE_KEY="${SPARKLE_PRIVATE_KEY:-sparkle_private_key}"  # Path to your Sparkle private key
 SPARKLE_PUBLIC_ED_KEY="N4HJPxwDFLFXsF+wZO0gg5TpW0fejZwpe4aEEtSB+2k="
 SPARKLE_FEED_URL="https://joshferrara.github.io/hard-linker/appcast.xml"
-RELEASES_DIR="releases"
+RELEASES_DIR="${RELEASES_DIR:-releases}"
 
 # Colors for output
 RED='\033[0;31m'
