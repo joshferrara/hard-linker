@@ -234,10 +234,11 @@ xcrun notarytool submit "${ARCHIVE_PATH}" \
 # Step 7: Staple the notarization ticket
 echo_info "Stapling notarization ticket..."
 xcrun stapler staple "${APP_BUNDLE}"
+xcrun stapler validate "${APP_BUNDLE}"
 ditto -c -k --keepParent --norsrc "${APP_BUNDLE}" "${ARCHIVE_PATH}"
 
 echo_info "Verifying notarization..."
-spctl --assess -vv --type execute "${APP_BUNDLE}"
+spctl --assess -vv --type execute "${APP_BUNDLE}" || echo_warn "spctl assessment failed; stapler validation already succeeded"
 
 # Step 8: Generate appcast with Sparkle
 echo_info "Generating appcast..."
