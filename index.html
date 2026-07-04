@@ -3,29 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hard Linker - macOS Hard Link Creator</title>
+    <title>Hard Linker — Copy anything. Duplicate nothing.</title>
 
     <!-- Primary Meta Tags -->
-    <meta name="title" content="Hard Linker - macOS Hard Link Creator">
-    <meta name="description" content="Create hard links between files and folders on macOS with a native SwiftUI interface. Space-efficient file linking for developers, power users, and system administrators.">
+    <meta name="title" content="Hard Linker — Copy anything. Duplicate nothing.">
+    <meta name="description" content="A free, native macOS utility that creates hard-linked copies of files and folders with drag & drop. The copy lives anywhere you want and takes up no extra disk space.">
+    <meta name="author" content="Josh Ferrara">
+    <meta name="keywords" content="macOS, hard links, cp -al, file management, Plex, media library, disk space, developer tools">
+    <meta name="theme-color" content="#f6f7f9" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#111318" media="(prefers-color-scheme: dark)">
 
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://joshferrara.github.io/hard-linker/">
-    <meta property="og:title" content="Hard Linker - macOS Hard Link Creator">
-    <meta property="og:description" content="Create hard links between files and folders on macOS with a native SwiftUI interface. Space-efficient file linking for developers, power users, and system administrators.">
-    <meta property="og:image" content="https://joshferrara.github.io/hard-linker/Icon-iOS-Default-1024x1024@1x.png">
+    <meta property="og:title" content="Hard Linker — Copy anything. Duplicate nothing.">
+    <meta property="og:description" content="A free, native macOS utility that creates hard-linked copies of files and folders with drag & drop. Zero extra disk space.">
+    <meta property="og:image" content="https://joshferrara.github.io/hard-linker/assets/hardlinker-success-light.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://joshferrara.github.io/hard-linker/">
-    <meta property="twitter:title" content="Hard Linker - macOS Hard Link Creator">
-    <meta property="twitter:description" content="Create hard links between files and folders on macOS with a native SwiftUI interface. Space-efficient file linking for developers, power users, and system administrators.">
-    <meta property="twitter:image" content="https://joshferrara.github.io/hard-linker/Icon-iOS-Default-1024x1024@1x.png">
+    <meta property="twitter:title" content="Hard Linker — Copy anything. Duplicate nothing.">
+    <meta property="twitter:description" content="A free, native macOS utility that creates hard-linked copies of files and folders with drag & drop. Zero extra disk space.">
+    <meta property="twitter:image" content="https://joshferrara.github.io/hard-linker/assets/hardlinker-success-light.png">
 
-    <!-- Additional Meta Tags -->
-    <meta name="author" content="Josh Ferrara">
-    <meta name="keywords" content="macOS, hard links, SwiftUI, file management, developer tools, power users">
+    <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-SWEFHNCWMF"></script>
@@ -33,524 +36,747 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-SWEFHNCWMF');
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #141414;
-            --bg-card: #1a1a1a;
-            --border: #2a2a2a;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
-            --text-accent: #64ffda;
-            --accent: #00d4aa;
-            --accent-hover: #00b894;
-            --gradient: linear-gradient(135deg, #00d4aa 0%, #0099cc 100%);
+            --bg: #f6f7f9;
+            --bg-raised: #ffffff;
+            --bg-inset: #eceef2;
+            --ink: #1b1e26;
+            --ink-soft: #555b69;
+            --ink-faint: #8b91a0;
+            --line: #dfe2e8;
+            --accent: #2f6ff2;
+            --accent-ink: #ffffff;
+            --accent-soft: #e5edfe;
+            --good: #1e7d3c;
+            --good-soft: #e2f3e7;
+            --shadow-window: 0 24px 60px -18px rgba(27, 30, 38, 0.28), 0 6px 18px -8px rgba(27, 30, 38, 0.18);
+            --display: 'Bricolage Grotesque', -apple-system, sans-serif;
+            --body: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            --mono: ui-monospace, 'SF Mono', 'Menlo', monospace;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #111318;
+                --bg-raised: #1a1d24;
+                --bg-inset: #1e222a;
+                --ink: #eef0f4;
+                --ink-soft: #a6acba;
+                --ink-faint: #6f7583;
+                --line: #2b303a;
+                --accent: #4d84f7;
+                --accent-ink: #ffffff;
+                --accent-soft: #1d2c4d;
+                --good: #4cc06e;
+                --good-soft: #16301e;
+                --shadow-window: 0 24px 60px -18px rgba(0, 0, 0, 0.65), 0 6px 18px -8px rgba(0, 0, 0, 0.5);
+            }
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(-45deg, #0a0a0a, #050505, #0a0a0a);
-            background-size: 400% 400%;
-            animation: bgShift 20s ease infinite;
-            color: var(--text-primary);
+            font-family: var(--body);
+            background: var(--bg);
+            color: var(--ink);
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
         }
 
-        .container {
-            max-width: 1200px;
+        .wrap {
+            max-width: 1080px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 clamp(20px, 4vw, 40px);
         }
 
-        /* Header */
-        header {
-            padding: 2rem 0;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
-        }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
 
-        .header-content {
+        /* ---------- Nav ---------- */
+        nav {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            gap: 12px;
+            padding: 22px 0;
         }
 
-        .logo {
-            width: 80px;
-            height: 80px;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0, 212, 170, 0.3);
+        nav .app-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 9px;
         }
 
-        .header-text h1 {
-            font-size: 2.5rem;
+        nav .name {
+            font-family: var(--display);
             font-weight: 700;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            letter-spacing: -0.01em;
+            color: var(--ink);
         }
+        nav .name:hover { text-decoration: none; }
 
-        .header-text .tagline {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 4rem 0;
-            text-align: center;
-            background: radial-gradient(ellipse at center, rgba(0, 212, 170, 0.1) 0%, transparent 70%);
-        }
-
-        .hero h2 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-
-        .hero .subtitle {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            max-width: 600px;
+        nav .links {
             margin-left: auto;
-            margin-right: auto;
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            font-size: 0.92rem;
         }
 
-        .cta-button {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background: var(--gradient);
-            color: var(--bg-primary);
+        nav .links a { color: var(--ink-soft); font-weight: 500; }
+        nav .links a:hover { color: var(--ink); text-decoration: none; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent);
+            color: var(--accent-ink);
+            font-weight: 600;
+            padding: 9px 18px;
+            border-radius: 10px;
+            transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.15s;
+        }
+        .btn:hover {
             text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0, 212, 170, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px -6px color-mix(in srgb, var(--accent) 55%, transparent);
         }
+        nav .btn { padding: 8px 15px; font-size: 0.92rem; }
 
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0, 212, 170, 0.6);
-        }
-
-        /* Code Block */
-        .code-demo {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 3rem auto;
-            max-width: 600px;
-            font-family: 'JetBrains Mono', monospace;
-            position: relative;
-        }
-
-        .code-demo::before {
-            content: "Terminal";
-            position: absolute;
-            top: -12px;
-            left: 20px;
-            background: var(--bg-primary);
-            color: var(--text-accent);
-            padding: 0 10px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .code-line {
-            margin: 0.5rem 0;
-            color: var(--text-secondary);
-        }
-
-        .code-line .prompt {
-            color: var(--text-accent);
-        }
-
-        .code-line .command {
-            color: var(--text-primary);
-        }
-
-        /* Features Grid */
-        .features {
-            padding: 4rem 0;
-            background: var(--bg-secondary);
-        }
-
-        .features h3 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: var(--text-primary);
-        }
-
-        .features-grid {
+        /* ---------- Hero ---------- */
+        .hero {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
+            grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+            gap: clamp(32px, 5vw, 64px);
+            align-items: center;
+            padding: clamp(40px, 7vh, 88px) 0 clamp(48px, 7vh, 80px);
         }
 
-        .feature-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 2rem;
-            transition: all 0.3s ease;
+        .hero .eyebrow {
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 14px;
+        }
+
+        .hero h1 {
+            font-family: var(--display);
+            font-size: clamp(2.4rem, 5.2vw, 3.6rem);
+            font-weight: 700;
+            line-height: 1.04;
+            letter-spacing: -0.025em;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 em {
+            font-style: normal;
+            color: var(--accent);
+        }
+
+        .hero .sub {
+            font-size: 1.08rem;
+            color: var(--ink-soft);
+            max-width: 46ch;
+            margin-bottom: 30px;
+        }
+
+        .hero .cta-row {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .hero .btn { padding: 13px 24px; font-size: 1.02rem; border-radius: 12px; }
+
+        .hero .fineprint {
+            margin-top: 14px;
+            font-size: 0.85rem;
+            color: var(--ink-faint);
+        }
+        .hero .fineprint a { color: var(--ink-faint); text-decoration: underline; }
+
+        .hero-shot {
             position: relative;
-            overflow: hidden;
+            min-width: 0;
         }
 
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--gradient);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-            border-color: var(--accent);
-        }
-
-        .feature-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
+        .hero-shot img {
             display: block;
-        }
-
-        .feature-card h4 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-        }
-
-        .feature-card p {
-            color: var(--text-secondary);
-            line-height: 1.7;
-        }
-
-        /* Tech Details */
-        .tech-details {
-            padding: 4rem 0;
-        }
-
-        .tech-details h3 {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .tech-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .tech-item {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .tech-label {
-            color: var(--text-accent);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .tech-value {
-            color: var(--text-primary);
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border);
-            padding: 2rem 0;
-            text-align: center;
-        }
-
-        .footer-content {
-            color: var(--text-secondary);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .hero h2 {
-                font-size: 2rem;
-            }
-
-            .header-text h1 {
-                font-size: 2rem;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Animations */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 0.8s ease forwards;
-        }
-
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes bgShift {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        .feature-card:nth-child(1) { animation-delay: 0.1s; }
-        .feature-card:nth-child(2) { animation-delay: 0.2s; }
-        .feature-card:nth-child(3) { animation-delay: 0.3s; }
-        .feature-card:nth-child(4) { animation-delay: 0.4s; }
-
-        /* App Preview Section */
-        .app-preview {
-            padding: 4rem 0;
-            text-align: center;
-        }
-
-        .app-preview h3 {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            color: var(--text-primary);
-        }
-
-        .app-preview .description {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .screenshot-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            position: relative;
-        }
-
-        .screenshot-container::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: var(--gradient);
-            border-radius: 18px;
-            z-index: -1;
-            opacity: 0.3;
-        }
-
-        .app-screenshot {
             width: 100%;
+            max-width: 560px;
             height: auto;
             border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            box-shadow: var(--shadow-window);
+            margin-left: auto;
+        }
+
+        /* soft glow behind the window */
+        .hero-shot::before {
+            content: '';
+            position: absolute;
+            inset: 8% -6% -4% 10%;
+            background: radial-gradient(ellipse at 60% 40%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%);
+            z-index: -1;
+        }
+
+        /* ---------- Under the hood strip ---------- */
+        .hood {
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            background: var(--bg-inset);
+            padding: 26px 0;
+        }
+
+        .hood .wrap {
+            display: flex;
+            align-items: baseline;
+            gap: 12px 28px;
+            flex-wrap: wrap;
+        }
+
+        .hood code {
+            font-family: var(--mono);
+            font-size: 0.98rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .hood code .dollar { color: var(--accent); user-select: none; }
+
+        .hood p {
+            font-size: 0.94rem;
+            color: var(--ink-soft);
+            max-width: 62ch;
+        }
+
+        /* ---------- Sections ---------- */
+        section { padding: clamp(56px, 9vh, 104px) 0; }
+
+        .kicker {
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 12px;
+        }
+
+        h2 {
+            font-family: var(--display);
+            font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.12;
+            margin-bottom: 18px;
+        }
+
+        /* ---------- Explainer ---------- */
+        .explainer {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: clamp(32px, 6vw, 72px);
+            align-items: center;
+        }
+
+        .explainer p {
+            color: var(--ink-soft);
+            margin-bottom: 14px;
+            max-width: 52ch;
+        }
+        .explainer p strong { color: var(--ink); font-weight: 600; }
+
+        .diagram {
+            width: 100%;
+            height: auto;
+        }
+
+        .diagram .chip { fill: var(--bg-raised); stroke: var(--line); }
+        .diagram .chip-title { fill: var(--ink); font: 600 15px var(--body); }
+        .diagram .chip-path { fill: var(--ink-faint); font: 12px var(--mono); }
+        .diagram .flow { stroke: var(--accent); fill: none; }
+        .diagram .disk { fill: var(--accent-soft); stroke: var(--accent); }
+        .diagram .disk-title { fill: var(--ink); font: 600 15px var(--body); }
+        .diagram .disk-sub { fill: var(--ink-soft); font: 12px var(--body); }
+        .diagram .tally { fill: var(--good); font: 600 13px var(--body); }
+
+        /* ---------- How it works ---------- */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+            gap: clamp(32px, 6vw, 72px);
+            align-items: center;
+        }
+
+        .steps { list-style: none; counter-reset: step; }
+
+        .steps li {
+            counter-increment: step;
+            position: relative;
+            padding: 0 0 26px 58px;
+        }
+
+        .steps li:last-child { padding-bottom: 0; }
+
+        /* connecting line */
+        .steps li:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 19px;
+            top: 44px;
+            bottom: 6px;
+            width: 2px;
+            background: var(--line);
+            border-radius: 1px;
+        }
+
+        .steps li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--bg-raised);
+            border: 1px solid var(--line);
+            display: grid;
+            place-items: center;
+            font-family: var(--display);
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--accent);
+        }
+
+        .steps h3 {
+            font-family: var(--display);
+            font-size: 1.12rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            margin-bottom: 4px;
+        }
+
+        .steps p { color: var(--ink-soft); font-size: 0.95rem; max-width: 44ch; }
+
+        .steps-shot img {
+            display: block;
+            width: 100%;
+            max-width: 540px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: var(--shadow-window);
+        }
+
+        /* ---------- Details ---------- */
+        .details h2 { max-width: 24ch; }
+
+        .details-intro { color: var(--ink-soft); max-width: 56ch; margin-bottom: 44px; }
+
+        .details-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px clamp(32px, 5vw, 64px);
+        }
+
+        .details-list > div {
+            display: grid;
+            grid-template-columns: 30px minmax(0, 1fr);
+            gap: 14px;
+            padding: 18px 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .details-list svg {
+            width: 24px;
+            height: 24px;
+            color: var(--accent);
+            margin-top: 2px;
+        }
+
+        .details-list h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: -0.005em;
+            margin-bottom: 3px;
+        }
+
+        .details-list p { color: var(--ink-soft); font-size: 0.93rem; }
+        .details-list code { font-family: var(--mono); font-size: 0.86em; background: var(--bg-inset); padding: 1px 5px; border-radius: 5px; }
+
+        /* ---------- Good to know ---------- */
+        .know {
+            background: var(--bg-inset);
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .know .grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: clamp(24px, 4vw, 48px);
+            margin-top: 8px;
+        }
+
+        .know h3 {
+            font-family: var(--display);
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .know p { color: var(--ink-soft); font-size: 0.93rem; }
+
+        /* ---------- Final CTA ---------- */
+        .final {
+            text-align: center;
+            padding-bottom: clamp(72px, 10vh, 120px);
+        }
+
+        .final .app-icon {
+            width: 88px;
+            height: 88px;
+            border-radius: 20px;
+            margin-bottom: 22px;
+            box-shadow: 0 14px 34px -12px rgba(27, 30, 38, 0.35);
+        }
+
+        .final h2 { margin-bottom: 10px; }
+
+        .final p { color: var(--ink-soft); margin-bottom: 28px; }
+
+        .final .btn { padding: 14px 28px; font-size: 1.05rem; border-radius: 12px; }
+
+        .final .meta {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: var(--ink-faint);
+        }
+
+        /* ---------- Footer ---------- */
+        footer {
+            border-top: 1px solid var(--line);
+            padding: 28px 0;
+            font-size: 0.88rem;
+            color: var(--ink-faint);
+        }
+
+        footer .wrap {
+            display: flex;
+            gap: 10px 28px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        footer .spacer { margin-left: auto; }
+        footer a { color: var(--ink-soft); }
+
+        /* ---------- Reveal motion ---------- */
+        @media (prefers-reduced-motion: no-preference) {
+            .reveal {
+                opacity: 0;
+                transform: translateY(22px);
+                transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+            }
+            .reveal.in { opacity: 1; transform: none; }
+            .hero > * { transition-delay: 0.05s; }
+            .hero .hero-shot { transition-delay: 0.18s; }
+        }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 860px) {
+            .hero { grid-template-columns: 1fr; padding-top: 28px; }
+            .hero-shot img { margin-left: 0; }
+            .explainer, .steps-grid { grid-template-columns: 1fr; }
+            .steps-grid .steps-shot { order: -1; }
+            .details-list { grid-template-columns: 1fr; }
+            .know .grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 520px) {
+            nav .links a:not(.btn) { display: none; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <img src="Icon-iOS-Default-1024x1024@1x.png" alt="Hard Linker Icon" class="logo">
-                <div class="header-text">
-                    <h1>Hard Linker</h1>
-                    <div class="tagline">macOS // Hard Link Creator</div>
-                </div>
+    <header class="wrap">
+        <nav>
+            <img src="assets/icon-256.png" alt="" class="app-icon">
+            <a class="name" href="#">Hard Linker</a>
+            <div class="links">
+                <a href="https://github.com/joshferrara/hard-linker">GitHub</a>
+                <a href="https://github.com/joshferrara/hard-linker/releases">Release Notes</a>
+                <a class="btn" href="https://github.com/joshferrara/hard-linker/releases/download/v1.0.9/Hard-Linker-1.0.9.zip" data-download>Download</a>
             </div>
-        </div>
+        </nav>
     </header>
 
     <main>
-        <section class="hero">
-            <div class="container">
-                <h2>Space-Efficient File Linking</h2>
-                <p class="subtitle">
-                Create hard links between files and folders on macOS with a native SwiftUI interface.
-                Perfect for developers, power users, and system administrators.
+        <div class="wrap">
+            <section class="hero" style="padding-top: clamp(24px, 5vh, 64px);">
+                <div class="reveal">
+                    <div class="eyebrow">Free macOS utility</div>
+                    <h1>Copy anything.<br><em>Duplicate nothing.</em></h1>
+                    <p class="sub">
+                        Hard Linker creates hard-linked copies of files and folders with drag &amp; drop.
+                        The copy lives anywhere you want it — and takes up no extra disk space, because
+                        on disk it's the same data.
+                    </p>
+                    <div class="cta-row">
+                        <a class="btn" href="https://github.com/joshferrara/hard-linker/releases/download/v1.0.9/Hard-Linker-1.0.9.zip" data-download>
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Download for macOS
+                        </a>
+                    </div>
+                    <p class="fineprint">
+                        <span data-version>v1.0.9</span> · macOS 13+ · Universal · Free &amp; <a href="https://github.com/joshferrara/hard-linker">open source</a>
+                    </p>
+                </div>
+                <div class="hero-shot reveal">
+                    <picture>
+                        <source srcset="assets/hardlinker-success-dark.webp" media="(prefers-color-scheme: dark)">
+                        <img src="assets/hardlinker-success-light.webp" width="1200" height="1276"
+                             alt="Hard Linker app window showing two source folders linked into a destination folder, with a success message reading 'Created hard links for 2 items.'">
+                    </picture>
+                </div>
+            </section>
+        </div>
+
+        <div class="hood">
+            <div class="wrap">
+                <code><span class="dollar">$</span> cp -al source destination</code>
+                <p>That command is the whole trick — and it's all Hard Linker runs. No daemons, no database,
+                   no proprietary format. Just the battle-tested Unix tool, wrapped in a native interface
+                   that checks your inputs before anything touches the disk.</p>
+            </div>
+        </div>
+
+        <div class="wrap">
+            <section class="explainer-section">
+                <div class="explainer">
+                    <div class="reveal">
+                        <div class="kicker">The idea</div>
+                        <h2>One file. Two addresses.</h2>
+                        <p>
+                            A hard link is a <strong>second name for the same data on disk</strong>. Both paths
+                            open the same file — not a copy, not a shortcut that breaks when things move.
+                        </p>
+                        <p>
+                            Link a 100&nbsp;GB folder into another location and it finishes in seconds, using
+                            almost zero additional space. Delete one path later and nothing is lost — the data
+                            stays alive as long as any name still points to it.
+                        </p>
+                        <p>
+                            It's how power users seed torrents into a Plex library without doubling storage,
+                            stage backups, and keep one photo archive organized three different ways.
+                        </p>
+                    </div>
+                    <div class="reveal">
+                        <svg class="diagram" viewBox="0 0 520 300" role="img" aria-label="Diagram showing two file paths pointing to the same data on disk">
+                            <!-- path chip 1 -->
+                            <rect class="chip" x="8" y="30" width="252" height="64" rx="12" stroke-width="1.5"/>
+                            <text class="chip-title" x="28" y="57">IMG_0142.jpg</text>
+                            <text class="chip-path" x="28" y="78">~/Photos/Iceland/</text>
+
+                            <!-- path chip 2 -->
+                            <rect class="chip" x="8" y="204" width="252" height="64" rx="12" stroke-width="1.5"/>
+                            <text class="chip-title" x="28" y="231">IMG_0142.jpg</text>
+                            <text class="chip-path" x="28" y="252">~/Archive/Iceland/</text>
+
+                            <!-- flows -->
+                            <path class="flow" d="M 262 62 C 330 62, 330 128, 384 142" stroke-width="2.5" stroke-linecap="round"/>
+                            <path class="flow" d="M 262 236 C 330 236, 330 170, 384 156" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1 8"/>
+
+                            <!-- disk block -->
+                            <rect class="disk" x="388" y="108" width="124" height="84" rx="14" stroke-width="1.5"/>
+                            <text class="disk-title" x="450" y="144" text-anchor="middle">Same data</text>
+                            <text class="disk-sub" x="450" y="166" text-anchor="middle">one copy on disk</text>
+
+                            <!-- tally -->
+                            <text class="tally" x="450" y="222" text-anchor="middle">+0 bytes used</text>
+                        </svg>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="steps-grid">
+                    <div class="reveal">
+                        <div class="kicker">How it works</div>
+                        <h2>Three moves. Done.</h2>
+                        <ol class="steps">
+                            <li>
+                                <h3>Drop your sources</h3>
+                                <p>Drag any mix of files and folders in from Finder, or click to pick them. Add as many as you like.</p>
+                            </li>
+                            <li>
+                                <h3>Choose a destination</h3>
+                                <p>One folder, anywhere on the same volume. Each source keeps its own name inside it.</p>
+                            </li>
+                            <li>
+                                <h3>Create hard links</h3>
+                                <p>Hard Linker validates everything first, runs <code style="font-family: var(--mono); font-size: 0.9em;">cp&nbsp;-al</code>, and confirms the result.</p>
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="steps-shot reveal">
+                        <picture>
+                            <source srcset="assets/hardlinker-empty-dark.webp" media="(prefers-color-scheme: dark)">
+                            <img src="assets/hardlinker-empty-light.webp" width="1200" height="1276" loading="lazy"
+                                 alt="Hard Linker's empty state with two drop zones: one for source files and folders, one for the destination folder">
+                        </picture>
+                    </div>
+                </div>
+            </section>
+
+            <section class="details">
+                <div class="kicker">The details</div>
+                <h2>Small app. Careful engineering.</h2>
+                <p class="details-intro">
+                    Hard links are sharp tools — pointing them at the wrong place is how files get clobbered.
+                    Most of Hard Linker's code exists to make sure that never happens.
                 </p>
-                <a href="https://github.com/joshferrara/hard-linker/releases/download/v1.0.6/Hard-Linker-1.0.6.zip" class="cta-button">
-                    Download Hard Linker v1.0.6
-                </a>
+                <div class="details-list">
+                    <div class="reveal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                        <div>
+                            <h3>Preflight validation</h3>
+                            <p>Duplicate target names, already-existing files, missing sources, and recursive
+                               destinations (linking a folder into itself) are all caught before <code>cp</code> ever runs.</p>
+                        </div>
+                    </div>
+                    <div class="reveal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M8 12h8M12 8v8"/></svg>
+                        <div>
+                            <h3>Many sources, one pass</h3>
+                            <p>Queue up any number of files and folders and link them into a destination in a
+                               single operation, with per-item results.</p>
+                        </div>
+                    </div>
+                    <div class="reveal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6.75H7.5a3.75 3.75 0 0 0 0 7.5H9m6-7.5h1.5a3.75 3.75 0 0 1 0 7.5H15m-6.75-3.75h7.5"/></svg>
+                        <div>
+                            <h3>True hard links</h3>
+                            <p>Real directory entries pointing at the same data — not symlinks or aliases that
+                               break when the original moves or disappears.</p>
+                        </div>
+                    </div>
+                    <div class="reveal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2.5" width="16" height="19" rx="3"/><circle cx="12" cy="17.5" r="1.2" fill="currentColor" stroke="none"/><path d="M9 6h6"/></svg>
+                        <div>
+                            <h3>Native through and through</h3>
+                            <p>Built with SwiftUI for macOS 13 and later. Light and dark mode, drag &amp; drop,
+                               a universal binary for Apple silicon and Intel.</p>
+                        </div>
+                    </div>
+                    <div class="reveal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg>
+                        <div>
+                            <h3>Quiet auto-updates</h3>
+                            <p>Signed, notarized releases delivered through Sparkle. Check for updates from the
+                               app menu; new versions install themselves.</p>
+                        </div>
+                    </div>
+                    <div class="reveal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                        <div>
+                            <h3>Free &amp; open source</h3>
+                            <p>The entire app is a readable Swift package
+                               <a href="https://github.com/joshferrara/hard-linker">on GitHub</a> — audit what
+                               touches your files, or build it yourself.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="know">
+            <div class="wrap">
+                <section style="padding: clamp(44px, 7vh, 72px) 0;">
+                    <div class="kicker">Good to know</div>
+                    <h2>Hard links, honestly.</h2>
+                    <div class="grid">
+                        <div class="reveal">
+                            <h3>Same volume only</h3>
+                            <p>Hard links can't cross drives or partitions — that's a filesystem rule, not an
+                               app limitation. Both paths need to live on the same volume.</p>
+                        </div>
+                        <div class="reveal">
+                            <h3>Folders are rebuilt, files are linked</h3>
+                            <p>macOS doesn't hard-link directories, so Hard Linker recreates the folder structure
+                               and links every file inside — which is exactly what you want.</p>
+                        </div>
+                        <div class="reveal">
+                            <h3>It's the same file</h3>
+                            <p>Edit the data through either path and both reflect it. Deleting one path never
+                               deletes the data — it survives until the last link is gone.</p>
+                        </div>
+                    </div>
+                </section>
             </div>
-        </section>
+        </div>
 
-        <section class="container">
-            <div class="code-demo">
-                <div class="code-line">
-                    <span class="prompt">$</span> <span class="command">cp -al /source/folder /destination/folder</span>
+        <div class="wrap">
+            <section class="final">
+                <img src="assets/icon-256.png" alt="" class="app-icon reveal">
+                <h2 class="reveal">Stop paying for the same bytes twice.</h2>
+                <p class="reveal">Download Hard Linker and make your next copy free.</p>
+                <div class="reveal">
+                    <a class="btn" href="https://github.com/joshferrara/hard-linker/releases/download/v1.0.9/Hard-Linker-1.0.9.zip" data-download>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download for macOS
+                    </a>
+                    <p class="meta"><span data-version>v1.0.9</span> · macOS 13+ · about 2 MB</p>
                 </div>
-                <div class="code-line">
-                    <span style="color: var(--text-accent);"># Hard Linker automates this process with a drag & drop GUI</span>
-                </div>
-            </div>
-        </section>
-
-        <section class="app-preview">
-            <div class="container">
-                <h3>Native macOS Interface</h3>
-                <p class="description">
-                Clean, intuitive SwiftUI design that feels right at home on macOS.
-                Drag files/folders directly into the app or use the file picker for precise control.
-                </p>
-                <div class="screenshot-container">
-                    <img src="app-screenshot.png" alt="Hard Linker App Interface" class="app-screenshot">
-                </div>
-            </div>
-        </section>
-
-        <section class="features">
-            <div class="container">
-                <h3>Built for Power Users</h3>
-                <div class="features-grid">
-                    <div class="feature-card fade-in">
-                        <div class="feature-icon">🎯</div>
-                        <h4>Drag & Drop Interface</h4>
-                        <p>Intuitive macOS-native interface. Simply drag source files/folders and destination into the app, or use the built-in file picker for precise selection.</p>
-                    </div>
-
-                    <div class="feature-card fade-in">
-                        <div class="feature-icon">⚡</div>
-                        <h4>Multiple Sources</h4>
-                        <p>Link multiple source files/folders to a single destination in one operation. Perfect for organizing complex directory structures efficiently.</p>
-                    </div>
-
-                    <div class="feature-card fade-in">
-                        <div class="feature-icon">🔗</div>
-                        <h4>True Hard Links</h4>
-                        <p>Creates actual hard links using <code>cp -al</code>, not symbolic links. Files remain accessible even if original paths change or are deleted.</p>
-                    </div>
-
-                    <div class="feature-card fade-in">
-                        <div class="feature-icon">💾</div>
-                        <h4>Zero Space Overhead</h4>
-                        <p>Hard links reference the same disk data, consuming virtually no additional storage space while providing multiple access points to your files.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="tech-details">
-            <div class="container">
-                <h3>Technical Specifications</h3>
-                <div class="tech-grid">
-                    <div class="tech-item">
-                        <div class="tech-label">LANGUAGE</div>
-                        <div class="tech-value">Swift 5.9+</div>
-                    </div>
-                    <div class="tech-item">
-                        <div class="tech-label">FRAMEWORK</div>
-                        <div class="tech-value">SwiftUI</div>
-                    </div>
-                    <div class="tech-item">
-                        <div class="tech-label">MINIMUM OS</div>
-                        <div class="tech-value">macOS 13.0</div>
-                    </div>
-                    <div class="tech-item">
-                        <div class="tech-label">ARCHITECTURE</div>
-                        <div class="tech-value">Universal Binary</div>
-                    </div>
-                </div>
-
-                <div style="margin-top: 3rem; text-align: center;">
-                    <h4 style="margin-bottom: 1rem; color: var(--text-accent);">Common Use Cases</h4>
-                    <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; color: var(--text-secondary);">
-                        <span>• Backup Solutions</span>
-                        <span>• Development Environments</span>
-                        <span>• Media Organization</span>
-                        <span>• Testing Workflows</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+            </section>
+        </div>
     </main>
 
     <footer>
-        <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2026 <a href="https://joshferrara.com" style="color: var(--text-accent); text-decoration: none;">Josh Ferrara</a>. Built with SwiftUI for macOS power users.</p>
-                <p style="margin-top: 0.5rem;">
-                    <a href="https://github.com/joshferrara/hard-linker" style="color: var(--text-accent); text-decoration: none;">
-                        View Source Code →
-                    </a>
-                </p>
-            </div>
+        <div class="wrap">
+            <span>© 2026 <a href="https://joshferrara.com">Josh Ferrara</a></span>
+            <span class="spacer"></span>
+            <a href="https://github.com/joshferrara/hard-linker">Source Code</a>
+            <a href="https://github.com/joshferrara/hard-linker/releases">Releases</a>
+            <a href="https://github.com/joshferrara/hard-linker/issues">Report an Issue</a>
         </div>
     </footer>
 
     <script>
-        // Add fade-in animation on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
+        // Scroll-triggered reveals
+        const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.animationPlayState = 'running';
+                    entry.target.classList.add('in');
+                    observer.unobserve(entry.target);
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        document.querySelectorAll('.fade-in').forEach(el => {
-            observer.observe(el);
-        });
+        // Keep download links pointed at the latest release
+        fetch('https://api.github.com/repos/joshferrara/hard-linker/releases/latest')
+            .then(r => r.ok ? r.json() : null)
+            .then(release => {
+                if (!release) return;
+                const asset = (release.assets || []).find(a => a.name.endsWith('.zip'));
+                if (!asset) return;
+                document.querySelectorAll('[data-download]').forEach(a => a.href = asset.browser_download_url);
+                document.querySelectorAll('[data-version]').forEach(el => el.textContent = release.tag_name);
+            })
+            .catch(() => {});
     </script>
 </body>
 </html>

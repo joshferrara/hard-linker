@@ -27,3 +27,7 @@ releases/
 *.tmp
 *.log
 *.swp
+
+# Local agent/editor config (may contain secrets)
+.codex/
+.claude/
