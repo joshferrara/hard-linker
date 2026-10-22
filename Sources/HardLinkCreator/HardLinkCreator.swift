@@ -30,6 +30,8 @@ struct HardLinkCreatorApp: App {
 }
 
 struct ContentView: View {
+    @StateObject private var history = LinkHistoryStore()
+    @State private var selectedTab = 0
     @Environment(\.colorScheme) private var colorScheme
     @State private var sourceFolders: [URL] = []
     @State private var destinationFolder: URL?
@@ -42,7 +44,25 @@ struct ContentView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ZStack {
+            HStack(spacing: 12) {
+                Picker("", selection: $selectedTab) {
+                    Text(L("Create")).tag(0)
+                    Text(L("History")).tag(1)
+                    Text(L("Search")).tag(2)
+                }
+                .pickerStyle(.segmented)
+
+                Text("\(L("Version")) \(appVersion)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize()
+            }
+            .padding(.horizontal, 28)
+            .padding(.top, 18)
+            .padding(.bottom, 8)
+
+            if selectedTab == 0 {
+                ZStack {
                 WindowSurfaceBackground()
 
                 VStack(alignment: .leading, spacing: 18) {
@@ -58,9 +78,13 @@ struct ContentView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-            Divider()
-
-            footer
+                Divider()
+                footer
+            } else if selectedTab == 1 {
+                HistoryPanel(store: history)
+            } else {
+                SearchPanel(records: history.records)
+            }
         }
         .toolbar {
             ToolbarItem(placement: .principal) {
@@ -78,14 +102,18 @@ struct ContentView: View {
         !sourceFolders.isEmpty && destinationFolder != nil && !isCreatingLinks
     }
 
+    private var appVersion: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? L("Development")
+    }
+
     private var sourceSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 10) {
-                Label("Sources", systemImage: "tray.and.arrow.down")
+                Label(L("Sources"), systemImage: "tray.and.arrow.down")
                     .font(.headline)
                 Spacer()
                 if !sourceFolders.isEmpty {
-                    Text("\(sourceFolders.count) selected")
+                    Text("\(sourceFolders.count) " + L("selected"))
                         .font(.caption.weight(.medium))
                         .foregroundStyle(.secondary)
                         .padding(.horizontal, 8)
@@ -101,8 +129,8 @@ struct ContentView: View {
                 if sourceFolders.isEmpty {
                     EmptyDropContent(
                         systemImage: "doc.badge.plus",
-                        title: "Drop files or folders here",
-                        subtitle: "Click to choose from Finder"
+                        title: L("Drop files or folders here"),
+                        subtitle: L("Click to choose from Finder")
                     )
                 } else {
                     ScrollView {
@@ -132,7 +160,7 @@ struct ContentView: View {
     private var destinationSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 10) {
-                Label("Destination", systemImage: "folder")
+                Label(L("Destination"), systemImage: "folder")
                     .font(.headline)
                 Spacer()
             }
@@ -159,8 +187,8 @@ struct ContentView: View {
                 } else {
                     EmptyDropContent(
                         systemImage: "folder.badge.plus",
-                        title: "Drop a destination folder here",
-                        subtitle: "Click to choose from Finder"
+                        title: L("Drop a destination folder here"),
+                        subtitle: L("Click to choose from Finder")
                     )
                 }
             }
@@ -195,7 +223,7 @@ struct ContentView: View {
                 } else {
                     Image(systemName: "link")
                 }
-                Text(isCreatingLinks ? "Creating Links..." : "Create Hard Links")
+                Text(L(isCreatingLinks ? "Creating Links..." : "Create Hard Links"))
             }
             .font(.headline)
             .frame(maxWidth: .infinity)
@@ -281,8 +309,8 @@ struct ContentView: View {
         }
         .buttonStyle(IconButtonStyle())
         .disabled(isCreatingLinks)
-        .help("Remove")
-        .accessibilityLabel("Remove")
+        .help(L("Remove"))
+        .accessibilityLabel(L("Remove"))
     }
 
     private func dropZone<Content: View>(
@@ -360,7 +388,7 @@ struct ContentView: View {
                 appendSource(url)
             }
         case .failure(let error):
-            status = .failure("Could not select sources: \(error.localizedDescription)")
+            status = .failure("\(L("Could not select sources:")) \(error.localizedDescription)")
         }
     }
 
@@ -371,7 +399,7 @@ struct ContentView: View {
                 setDestination(url)
             }
         case .failure(let error):
-            status = .failure("Could not select destination: \(error.localizedDescription)")
+            status = .failure("\(L("Could not select destination:")) \(error.localizedDescription)")
         }
     }
 
@@ -386,7 +414,7 @@ struct ContentView: View {
     private func setDestination(_ url: URL) {
         let fileURL = url.fileURL
         guard fileURL.isExistingDirectory else {
-            status = .failure("Choose a folder for the destination.")
+            status = .failure(L("Choose a folder for the destination."))
             return
         }
 
@@ -403,16 +431,17 @@ struct ContentView: View {
 
         do {
             let plan = try HardLinkPlan(sources: selectedSources, destination: destination)
-            status = .working("Creating hard links for \(plan.jobs.count) \(plan.jobs.count == 1 ? "item" : "items")...")
+            status = .working("\(L("Creating hard links for")) \(plan.jobs.count) \(L(plan.jobs.count == 1 ? "item" : "items"))...")
 
             Task.detached(priority: .userInitiated) {
                 let result = HardLinkRunner.createLinks(from: plan)
 
                 await MainActor.run {
                     isCreatingLinks = false
+                    history.record(result.successfulJobs)
 
                     if result.failures.isEmpty {
-                        status = .success("Created hard links for \(result.successCount) \(result.successCount == 1 ? "item" : "items").")
+                        status = .success("\(L("Created hard links for")) \(result.successCount) \(L(result.successCount == 1 ? "item" : "items")).")
                     } else {
                         status = .failure(result.summary)
                     }
@@ -666,17 +695,17 @@ enum HardLinkValidationError: LocalizedError, Equatable {
     var errorDescription: String? {
         switch self {
         case .noSources:
-            return "Choose at least one source."
+            return L("Choose at least one source.")
         case .destinationNotFolder(let path):
-            return "The destination is not a folder: \(path)"
+            return "\(L("The destination is not a folder:")) \(path)"
         case .sourceMissing(let path):
-            return "The source no longer exists: \(path)"
+            return "\(L("The source no longer exists:")) \(path)"
         case .destinationInsideSource(let source, let destination):
-            return "The destination cannot be the source folder or inside it.\nSource: \(source)\nDestination: \(destination)"
+            return "\(L("The destination cannot be the source folder or inside it."))\n\(L("Sources")): \(source)\n\(L("Destination")): \(destination)"
         case .duplicateTarget(let target, let firstSource, let secondSource):
-            return "Two sources would create the same target:\nTarget: \(target)\nSource 1: \(firstSource)\nSource 2: \(secondSource)"
+            return "\(L("Two sources would create the same target:"))\n\(L("Target")): \(target)\n\(L("Source 1")): \(firstSource)\n\(L("Source 2")): \(secondSource)"
         case .targetExists(let path):
-            return "A file or folder already exists at the target path: \(path)"
+            return "\(L("A file or folder already exists at the target path:")) \(path)"
         }
     }
 }
@@ -686,16 +715,18 @@ struct HardLinkRunner {
         SecurityScopedAccess.withAccess(to: plan.securityScopedURLs) {
             var successCount = 0
             var failures: [HardLinkFailure] = []
+            var successfulJobs: [HardLinkSuccess] = []
 
             for job in plan.jobs {
                 if let message = runCopy(for: job) {
                     failures.append(HardLinkFailure(sourceName: job.source.lastPathComponent, message: message))
                 } else {
                     successCount += 1
+                    successfulJobs.append(HardLinkSuccess(job: job, fileCount: LinkInspector.fileCount(at: job.target)))
                 }
             }
 
-            return HardLinkResult(successCount: successCount, failures: failures)
+            return HardLinkResult(successCount: successCount, failures: failures, successfulJobs: successfulJobs)
         }
     }
 
@@ -731,12 +762,18 @@ struct HardLinkRunner {
 struct HardLinkResult {
     let successCount: Int
     let failures: [HardLinkFailure]
+    let successfulJobs: [HardLinkSuccess]
 
     var summary: String {
-        let itemWord = failures.count == 1 ? "item" : "items"
+        let itemWord = L(failures.count == 1 ? "item" : "items")
         let failureLines = failures.map { "\($0.sourceName): \($0.message)" }
-        return "Could not create hard links for \(failures.count) \(itemWord).\n" + failureLines.joined(separator: "\n")
+        return "\(L("Could not create hard links for")) \(failures.count) \(itemWord).\n" + failureLines.joined(separator: "\n")
     }
+}
+
+struct HardLinkSuccess {
+    let job: HardLinkJob
+    let fileCount: Int
 }
 
 struct HardLinkFailure {
